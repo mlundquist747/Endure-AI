@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Endure AI"/>
+  <meta name="theme-color" content="#185FA5"/>
+  <title>Endure AI</title>
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --blue:      #185FA5;
+      --blue2:     #0C447C;
+      --blue-lt:   #378ADD;
+      --blue-dim:  rgba(24,95,165,0.08);
+      --blue-dim2: rgba(24,95,165,0.14);
+      --blue-mid:  #B5D4F4;
+      --blue-pale: #E6F1FB;
+      --purple:    #534AB7;
+      --purple-dim:#EEEDFE;
+      --green:     #3B6D11;
+      --green-dim: #EAF3DE;
+      --red:       #A32D2D;
+      --red-dim:   #FCEBEB;
+      --amber:     #854F0B;
+      --amber-dim: #FAEEDA;
+      --text:      #111111;
+      --text2:     #555555;
+      --text3:     #999999;
+      --border:    rgba(0,0,0,0.09);
+      --border2:   rgba(0,0,0,0.16);
+      --bg:        #ffffff;
+      --bg2:       #f6f7f9;
+      --bg3:       #eef0f3;
+      --r:         10px;
+      --r-lg:      15px;
+      --safe-top:  env(safe-area-inset-top, 44px);
+      --safe-bot:  env(safe-area-inset-bottom, 20px);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; height: 100dvh; background: var(--bg); color: var(--text); font-family: 'Figtree', sans-serif; font-size: 15px; -webkit-font-smoothing: antialiased; overscroll-behavior: none; }
+    #app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+
+    /* STATUS BAR */
+    .status-bar { height: var(--safe-top); background: var(--blue); flex-shrink: 0; }
+
+    /* TOP BAR */
+    .top-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 16px; height: 50px; background: var(--blue); flex-shrink: 0; }
+    .logo { display: flex; align-items: center; gap: 9px; }
+    .logo-mark { width: 28px; height: 28px; flex-shrink: 0; }
+    .logo-name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
+    .garmin-pill { font-size: 11px; font-weight: 500; padding: 4px 11px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85); cursor: pointer; }
+    .garmin-pill.on { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.5); color: #fff; }
+
+    /* PAGES */
+    #pages { flex: 1; overflow: hidden; position: relative; }
+    .page { position: absolute; inset: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 18px 15px 100px; opacity: 0; pointer-events: none; transform: translateY(6px); transition: opacity 0.18s ease, transform 0.18s ease; }
+    .page.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+
+    /* TAB BAR */
+    .tab-bar { display: flex; background: var(--bg); border-top: 1px solid var(--border2); padding-bottom: var(--safe-bot); flex-shrink: 0; }
+    .tab-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 9px 0; background: none; border: none; cursor: pointer; color: var(--text3); transition: color 0.15s; }
+    .tab-btn.active { color: var(--blue); }
+    .tab-btn svg { width: 22px; height: 22px; stroke-width: 1.8; fill: none; stroke: currentColor; }
+    .tab-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    /* TYPOGRAPHY */
+    .page-title { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; margin-bottom: 2px; }
+    .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+    .sec { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.09em; margin: 20px 0 9px; }
+    .sec:first-of-type { margin-top: 0; }
+
+    /* CARDS */
+    .card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 15px; margin-bottom: 12px; }
+    .card-flat { background: var(--bg2); border-radius: var(--r-lg); padding: 15px; margin-bottom: 12px; }
+
+    /* WEEK STRIP */
+    .week-strip { display: flex; gap: 5px; overflow-x: auto; padding-bottom: 2px; margin-bottom: 4px; }
+    .week-strip::-webkit-scrollbar { display: none; }
+    .day-pill { flex-shrink: 0; width: 42px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 8px 4px; text-align: center; }
+    .day-pill.today { border-color: var(--blue); border-width: 1.5px; }
+    .day-pill.rest { background: var(--bg2); opacity: 0.55; }
+    .d-lbl { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+    .d-ico { font-size: 16px; line-height: 1; margin-bottom: 3px; }
+    .d-pips { display: flex; gap: 2px; justify-content: center; margin-top: 4px; }
+    .pip { width: 4px; height: 4px; border-radius: 50%; }
+
+    /* STAT GRID */
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px 14px; transition: border-color 0.2s, background 0.2s; }
+    .stat-card.warn { background: var(--amber-dim); border-color: rgba(133,79,11,0.25); }
+    .stat-card.bad  { background: var(--red-dim);   border-color: rgba(163,45,45,0.25); }
+    .s-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+    .s-val { font-size: 30px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-card.warn .s-val { color: var(--amber); }
+    .stat-card.bad  .s-val { color: var(--red); }
+    .s-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
+    .stat-card.warn .s-sub { color: var(--amber); }
+    .stat-card.bad  .s-sub { color: var(--red); }
+    .prog-track { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 8px; }
+    .prog-fill  { height: 100%; border-radius: 2px; background: var(--blue); }
+
+    /* VOLUME GRID */
+    .vol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .vol-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px 14px; }
+    .v-sport { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .v-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .v-num { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+    .v-unit { font-size: 10px; color: var(--text3); margin-top: 2px; }
+    .v-delta { font-size: 10px; color: var(--text2); margin-top: 7px; }
+    .v-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 9px; }
+    .v-fill { height: 100%; border-radius: 2px; }
+
+    /* INSIGHT CARD */
+    .insight-card { background: var(--bg); border: 1px solid var(--border2); border-left: 3px solid var(--blue); border-radius: var(--r-lg); padding: 14px 15px; }
+    .ins-hdr { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+    .ins-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(24,95,165,.35); } 50% { box-shadow: 0 0 0 5px rgba(24,95,165,0); } }
+    .ins-lbl { font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.09em; }
+    .ins-text { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 13px; }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .chip { font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--blue-mid); background: var(--blue-pale); color: var(--blue2); cursor: pointer; white-space: nowrap; }
+    .chip:active { background: var(--blue-dim2); }
+
+    /* PLAN CARD */
+    .plan-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 12px; }
+    .plan-hdr { padding: 12px 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--bg2); }
+    .plan-hdr-title { font-size: 13px; font-weight: 700; color: var(--text); }
+    .plan-hdr-sub { font-size: 11px; color: var(--text2); }
+    .plan-row { display: flex; align-items: center; gap: 11px; padding: 11px 15px; border-bottom: 1px solid var(--border); }
+    .plan-row:last-child { border-bottom: none; }
+    .plan-day { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; width: 26px; flex-shrink: 0; }
+    .plan-body { flex: 1; }
+    .plan-name { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 2px; }
+    .plan-meta { font-size: 11px; color: var(--text2); }
+    .push-mini { font-size: 10px; font-weight: 600; color: var(--blue); border: 1px solid var(--blue-mid); background: var(--blue-pale); border-radius: 8px; padding: 4px 9px; white-space: nowrap; cursor: pointer; }
+    .push-mini:active { background: var(--blue-dim2); }
+
+    /* BADGES */
+    .badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .b-swim { background: var(--blue-pale); color: var(--blue2); }
+    .b-bike { background: var(--green-dim); color: var(--green); }
+    .b-run  { background: var(--blue-pale); color: var(--blue); }
+    .b-lift { background: var(--purple-dim); color: var(--purple); }
+
+    /* WORKOUT STEPS */
+    .wk-card { border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 15px; background: var(--bg); margin-bottom: 10px; }
+    .wk-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+    .wk-title { font-size: 15px; font-weight: 700; margin-top: 5px; }
+    .wk-meta { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
+    .step-list { display: flex; flex-direction: column; }
+    .step { display: flex; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .step:last-child { border-bottom: none; }
+    .step-ico { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; border: 1.5px solid; }
+    .sz1 { border-color: rgba(24,95,165,.3); color: var(--blue); background: var(--blue-pale); }
+    .sz2 { border-color: rgba(24,95,165,.5); color: var(--blue); background: var(--blue-pale); }
+    .sz3 { border-color: rgba(133,79,11,.45); color: var(--amber); background: var(--amber-dim); }
+    .sz4 { border-color: rgba(163,45,45,.45); color: var(--red); background: var(--red-dim); }
+    .step-body { flex: 1; }
+    .step-name { font-size: 13px; font-weight: 600; }
+    .step-detail { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .step-target { font-size: 11px; font-weight: 600; margin-top: 3px; }
+    .tz1,.tz2 { color: var(--blue); } .tz3 { color: var(--amber); } .tz4 { color: var(--red); }
+
+    /* PUSH ROWS */
+    .push-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .push-row:last-child { border-bottom: none; }
+    .push-day { font-size: 13px; font-weight: 600; }
+    .push-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .push-btn { font-size: 11px; font-weight: 600; padding: 6px 13px; border-radius: 8px; border: 1px solid var(--blue-mid); color: var(--blue); background: var(--blue-pale); cursor: pointer; white-space: nowrap; }
+    .push-btn:active { background: var(--blue-dim2); }
+    .push-btn:disabled { opacity: 0.4; }
+    .push-all { width: 100%; margin-top: 14px; padding: 13px; font-size: 15px; font-weight: 700; background: var(--blue); border: none; color: #fff; border-radius: var(--r); cursor: pointer; }
+    .push-all:active { background: var(--blue2); }
+
+    /* FORMS */
+    .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
+    .form-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .form-group select, .form-group input, .form-group textarea { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); font-size: 15px; padding: 11px 13px; font-family: 'Figtree', sans-serif; outline: none; -webkit-appearance: none; width: 100%; }
+    .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+    .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--blue); }
+    .btn-primary { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; font-family: 'Figtree', sans-serif; background: var(--blue); color: #fff; border: none; border-radius: var(--r); cursor: pointer; }
+    .btn-primary:active { background: var(--blue2); transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.45; }
+
+    /* CHAT */
+    #p-coach { padding: 0; display: flex; flex-direction: column; }
+    .coach-hdr { padding: 16px 15px 10px; flex-shrink: 0; border-bottom: 1px solid var(--border); }
+    #chat-msgs { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 15px; display: flex; flex-direction: column; gap: 12px; }
+    .msg { max-width: 82%; }
+    .msg.ai   { align-self: flex-start; }
+    .msg.user { align-self: flex-end; }
+    .msg-bubble { padding: 11px 14px; font-size: 14px; line-height: 1.55; border-radius: 16px; }
+    .msg.ai   .msg-bubble { background: var(--bg2); color: var(--text); border-radius: 5px 16px 16px 16px; border: 1px solid var(--border); }
+    .msg.user .msg-bubble { background: var(--blue); color: #fff; border-radius: 16px 5px 16px 16px; font-weight: 500; }
+    .chat-input-wrap { padding: 10px 14px; padding-bottom: calc(10px + var(--safe-bot)); border-top: 1px solid var(--border2); background: var(--bg); display: flex; gap: 9px; flex-shrink: 0; }
+    .chat-input { flex: 1; background: var(--bg2); border: 1px solid var(--border2); border-radius: 22px; color: var(--text); font-size: 15px; padding: 11px 16px; font-family: 'Figtree', sans-serif; outline: none; }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .chat-send:active { background: var(--blue2); transform: scale(0.92); }
+    .chat-send:disabled { opacity: 0.4; }
+    .typing { display: flex; gap: 4px; align-items: center; }
+    .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: typing 1.2s ease-in-out infinite; }
+    .typing span:nth-child(2) { animation-delay: 0.2s; }
+    .typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing { 0%,100% { opacity:.3; transform:translateY(0); } 50% { opacity:1; transform:translateY(-3px); } }
+    .qp-scroll { display: flex; gap: 7px; overflow-x: auto; padding: 10px 0 4px; }
+    .qp-scroll::-webkit-scrollbar { display: none; }
+    .qp-chip { flex-shrink: 0; font-size: 12px; font-weight: 500; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); cursor: pointer; white-space: nowrap; }
+    .qp-chip:active { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
+
+    /* PROFILE */
+    .pf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .pf-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px; }
+    .pf-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+    .pf-val { font-size: 22px; font-weight: 700; color: var(--text); }
+    .pf-input { font-size: 20px; font-weight: 700; background: var(--blue-pale); border: 1.5px solid var(--blue); border-radius: 6px; color: var(--text); padding: 4px 8px; width: 100%; outline: none; font-family: 'Figtree', sans-serif; }
+    .sec-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; margin-top: 20px; }
+    .sec-row .sec { margin: 0; }
+    .sec-row:first-of-type { margin-top: 0; }
+    .edit-btn   { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); cursor: pointer; }
+    .save-btn   { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: none; color: #fff; background: var(--blue); cursor: pointer; }
+    .cancel-btn { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); cursor: pointer; }
+    .sec-actions { display: flex; gap: 7px; }
+    .zone-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .zone-row:last-child { border-bottom: none; }
+    .zone-name  { font-size: 13px; font-weight: 600; }
+    .zone-range { font-size: 12px; font-weight: 600; }
+    .race-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .race-row:last-child { border-bottom: none; }
+    .race-name { font-size: 14px; font-weight: 600; }
+    .race-date { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .race-pill { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 8px; background: var(--blue-pale); color: var(--blue2); border: 1px solid var(--blue-mid); white-space: nowrap; }
+
+    /* PLAN WEEK */
+    .plan-week-hdr { display: flex; justify-content: space-between; font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+    .plan-session { display: flex; align-items: flex-start; gap: 11px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .plan-session:last-child { border-bottom: none; }
+    .ps-day { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; width: 28px; padding-top: 3px; }
+    .ps-body { flex: 1; }
+    .ps-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .ps-meta { font-size: 11px; color: var(--text2); }
+
+    /* MISC */
+    .info-box { background: var(--blue-pale); border: 1px solid var(--blue-mid); border-radius: var(--r); padding: 11px 14px; font-size: 12px; font-weight: 500; color: var(--blue2); line-height: 1.55; margin-bottom: 14px; }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="status-bar"></div>
+
+  <div class="top-bar">
+    <div class="logo">
+      <!-- Logo C: three ascending parallel lines -->
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="rgba(255,255,255,0.15)"/>
+        <path d="M5 31 Q11 30 16 27 Q21 24 26 20 Q30 17 35 14" stroke="white" stroke-opacity="0.25" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M5 27 Q10 25 15 22 Q20 18 24 15 Q28 12 35 10" stroke="white" stroke-opacity="0.55" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+        <path d="M5 23 Q10 20 14 17 Q19 13 23 10 Q27 8 35 6"  stroke="white" stroke-opacity="1.00" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+        <path d="M5 34 Q6.5 32.5 8 34 Q9.5 35.5 11 34" stroke="white" stroke-opacity="0.25" stroke-width="1.1" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-name">Endure AI</span>
+    </div>
+    <div class="garmin-pill" id="garmin-pill">Connect Garmin</div>
+  </div>
+
+  <div id="pages">
+
+    <!-- ══ TODAY ══ -->
+    <div class="page active" id="p-dashboard">
+      <div class="page-title">Today</div>
+      <div class="page-sub" id="dash-sub">Thursday · Week 9 of 24 · 7 weeks to Houston Tri</div>
+
+      <div class="sec">This week</div>
+      <div class="week-strip" style="margin-bottom:16px">
+        <div class="day-pill rest"><div class="d-lbl">Mon</div><div class="d-ico">—</div></div>
+        <div class="day-pill"><div class="d-lbl">Tue</div><div class="d-ico">🏊</div><div class="d-pips"><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div></div></div>
+        <div class="day-pill"><div class="d-lbl">Wed</div><div class="d-ico">🚴</div><div class="d-pips"><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div></div></div>
+        <div class="day-pill today"><div class="d-lbl">Thu</div><div class="d-ico">🏋️</div><div class="d-pips"><div class="pip" style="background:#534AB7"></div><div class="pip" style="background:#534AB7"></div></div></div>
+        <div class="day-pill"><div class="d-lbl">Fri</div><div class="d-ico">🏃</div><div class="d-pips"><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div></div></div>
+        <div class="day-pill"><div class="d-lbl">Sat</div><div class="d-ico">🚴</div><div class="d-pips"><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div></div></div>
+        <div class="day-pill"><div class="d-lbl">Sun</div><div class="d-ico">🏃</div><div class="d-pips"><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div></div></div>
+      </div>
+
+      <div class="sec">Fitness load</div>
+      <div class="stat-grid" id="stat-grid" style="margin-bottom:16px"></div>
+
+      <div class="sec">Weekly volume</div>
+      <div class="vol-grid" id="vol-grid" style="margin-bottom:16px"></div>
+
+      <div class="sec">Coach insight</div>
+      <div class="insight-card" style="margin-bottom:16px">
+        <div class="ins-hdr"><div class="ins-dot"></div><div class="ins-lbl">Coach AI</div></div>
+        <div class="ins-text">ATL is elevated at 81 — protect Saturday's long ride. TSB of −7 keeps you in the productive training window. Friday's interval run is Garmin-ready with auto-alerts every rep. For today's strength, sub split squats for barbell squats given your knee.</div>
+        <div class="chips">
+          <div class="chip" onclick="sendPrompt('Should I adjust Saturday\'s long ride? My legs feel heavy.')">Adjust Saturday</div>
+          <div class="chip" onclick="sendPrompt('Give me a knee-safe strength swap for today')">Knee-safe lift</div>
+          <div class="chip" onclick="sendPrompt('How is my training trending toward Houston Tri?')">Race readiness</div>
+        </div>
+      </div>
+
+      <div class="sec">Upcoming sessions</div>
+      <div class="plan-card">
+        <div class="plan-hdr"><div class="plan-hdr-title">This week</div><div class="plan-hdr-sub">520 TSS target</div></div>
+        <div class="plan-row"><div class="plan-day">Fri</div><div class="plan-body"><div class="plan-name"><span class="badge b-run">Run</span>4×8 min threshold</div><div class="plan-meta">70 min · Z4 · 7:10–8:00/mi · alerts on</div></div><div class="push-mini" onclick="pushWorkout(this)">Garmin ↗</div></div>
+        <div class="plan-row"><div class="plan-day">Sat</div><div class="plan-body"><div class="plan-name"><span class="badge b-bike">Bike</span>Long aerobic ride</div><div class="plan-meta">3h 30m · 220–240W · nutrition practice</div></div><div class="push-mini" onclick="pushWorkout(this)">Garmin ↗</div></div>
+        <div class="plan-row"><div class="plan-day">Sun</div><div class="plan-body"><div class="plan-name"><span class="badge b-run">Run</span>Easy long run</div><div class="plan-meta">90 min · Z2 · conversational pace</div></div><div class="push-mini" onclick="pushWorkout(this)">Garmin ↗</div></div>
+        <div class="plan-row"><div class="plan-day">Tue</div><div class="plan-body"><div class="plan-name"><span class="badge b-swim">Swim</span>Threshold sets</div><div class="plan-meta">3,200 yds · 4×200 @ CSS</div></div><div class="push-mini" onclick="pushWorkout(this)">Garmin ↗</div></div>
+      </div>
+    </div>
+
+    <!-- ══ PLAN ══ -->
+    <div class="page" id="p-plan">
+      <div class="page-title">Plan generator</div>
+      <div class="page-sub">AI-built workouts pushed to your Garmin</div>
+      <div class="info-box">Structured workouts include step-by-step targets. Your watch guides each interval with real-time pace and HR alerts.</div>
+
+      <div class="sec">Goal race</div>
+      <div class="card">
+        <div class="form-group">
+          <div class="form-label">Race type</div>
+          <select id="fg-race">
+            <option value="">Select race type...</option>
+            <option value="sprint_triathlon">Sprint Triathlon</option>
+            <option value="olympic_triathlon">Olympic Triathlon</option>
+            <option value="70.3_triathlon">70.3 Triathlon (Half Iron)</option>
+            <option value="140.6_triathlon">140.6 Triathlon (Full Iron)</option>
+            <option value="half_marathon">Half Marathon</option>
+            <option value="marathon">Marathon</option>
+            <option value="bike_race">Bike Race</option>
+            <option value="bike_ftp_build">Bike FTP Build (no race)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Event date</div>
+          <input type="date" id="fg-date"/>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Plan length</div>
+          <select id="fg-weeks">
+            <option value="8">8 weeks</option>
+            <option value="12">12 weeks</option>
+            <option value="16" selected>16 weeks</option>
+            <option value="20">20 weeks</option>
+            <option value="24">24 weeks</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Training days per week</div>
+          <input type="number" id="fg-days" value="5" min="3" max="7"/>
+        </div>
+        <div class="form-group" style="margin-bottom:16px">
+          <div class="form-label">Preferences &amp; notes</div>
+          <textarea id="fg-prefs" placeholder="e.g. Long rides on Saturdays, run intervals on Fridays, two strength sessions per week, avoid back-to-back hard days..."></textarea>
+        </div>
+        <button class="btn-primary" id="gen-btn" onclick="generatePlan()">Generate training plan</button>
+      </div>
+
+      <div class="sec">Sample — Friday interval run</div>
+      <div class="wk-card">
+        <div class="wk-top">
+          <div><span class="badge b-run">Run</span><div class="wk-title">4×8 min threshold</div></div>
+          <div style="text-align:right"><span class="badge b-swim" style="background:var(--green-dim);color:var(--green);border:none">Garmin ready</span><div style="font-size:11px;color:var(--text2);margin-top:5px">70 min</div></div>
+        </div>
+        <div class="wk-meta">Auto-alerts fire on watch · pace targets each rep · loops 4×</div>
+        <div class="step-list">
+          <div class="step"><div class="step-ico sz2">W</div><div class="step-body"><div class="step-name">Warm-up</div><div class="step-detail">15 min easy jog</div><div class="step-target tz2">Z2 · &lt;9:15/mi · HR &lt;140</div></div></div>
+          <div class="step"><div class="step-ico sz3">D</div><div class="step-body"><div class="step-name">Drills + strides</div><div class="step-detail">4 min activation</div><div class="step-target tz3">Alert: intervals in 60 sec</div></div></div>
+          <div class="step"><div class="step-ico sz4">1–4</div><div class="step-body"><div class="step-name">4× Intervals</div><div class="step-detail">8 min hard / 2 min recovery × 4</div><div class="step-target tz4">Z4 · 7:10–8:00/mi · HR 165–172</div></div></div>
+          <div class="step"><div class="step-ico sz1">C</div><div class="step-body"><div class="step-name">Cool-down</div><div class="step-detail">10 min easy</div><div class="step-target tz1">Z1 · HR dropping</div></div></div>
+        </div>
+      </div>
+
+      <div id="plan-output" style="display:none">
+        <div class="sec">Generated plan — week 1</div>
+        <div class="card" id="plan-weeks"></div>
+        <div class="sec">Push this week to Garmin</div>
+        <div class="card">
+          <div class="push-row"><div><div class="push-day">Friday</div><div class="push-meta">Run · 4×8 min threshold · 70 min</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
+          <div class="push-row"><div><div class="push-day">Saturday</div><div class="push-meta">Bike · Long aerobic ride · 3h 30m · 220–240W</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
+          <div class="push-row"><div><div class="push-day">Sunday</div><div class="push-meta">Run · Easy long run · 90 min · Z2</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
+          <div class="push-row"><div><div class="push-day">Tuesday</div><div class="push-meta">Swim · Threshold sets · 3,200 yds</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
+          <button class="push-all" onclick="pushAll()">Push full week to Garmin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ COACH ══ -->
+    <div class="page" id="p-coach">
+      <div class="coach-hdr">
+        <div class="page-title" style="margin-bottom:2px">Coach</div>
+        <div class="page-sub" style="margin-bottom:0">Knows your metrics, races &amp; health history</div>
+        <div class="qp-scroll">
+          <div class="qp-chip" onclick="sendPrompt('Build me a 16-week 70.3 plan starting next Monday')">16-week 70.3 plan</div>
+          <div class="qp-chip" onclick="sendPrompt('My knee is sore — what should I modify this week?')">Knee flare-up</div>
+          <div class="qp-chip" onclick="sendPrompt('Build a structured bike interval workout for Wednesday, formatted for Garmin')">Bike intervals</div>
+          <div class="qp-chip" onclick="sendPrompt('My legs feel heavy — should I rest Saturday or do the long ride?')">Rest or ride?</div>
+          <div class="qp-chip" onclick="sendPrompt('How is my swim volume trending for 70.3 prep?')">Swim check</div>
+          <div class="qp-chip" onclick="sendPrompt('What should I eat before my long ride Saturday?')">Pre-ride nutrition</div>
+        </div>
+      </div>
+      <div id="chat-msgs">
+        <div class="msg ai"><div class="msg-bubble">Hey! I know your FTP (268W), threshold pace (7:45/mi), goal races, and your right knee history. CTL is 74, TSB is −7 — solid building phase. What do you need?</div></div>
+      </div>
+      <div class="chat-input-wrap">
+        <input class="chat-input" id="chat-in" placeholder="Ask your coach..."/>
+        <button class="chat-send" id="send-btn" onclick="sendChat()">↑</button>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="page" id="p-profile">
+      <div class="page-title">Profile</div>
+      <div class="page-sub">Your metrics power every AI recommendation</div>
+
+      <div class="sec-row"><div class="sec" style="margin:0">Athlete</div><div class="sec-actions" id="athlete-actions"><button class="edit-btn" onclick="editSection('athlete')">Edit</button></div></div>
+      <div class="card" id="athlete-grid"></div>
+
+      <div class="sec-row"><div class="sec" style="margin:0">Performance</div><div class="sec-actions" id="perf-actions"><button class="edit-btn" onclick="editSection('perf')">Edit</button></div></div>
+      <div class="card" id="perf-grid"></div>
+
+      <div class="sec">Running zones</div>
+      <div class="card" id="run-zones"></div>
+
+      <div class="sec">Cycling zones</div>
+      <div class="card" id="bike-zones"></div>
+
+      <div class="sec">Goal races</div>
+      <div class="card">
+        <div class="race-row"><div><div class="race-name">Houston Tri — Olympic</div><div class="race-date">Jun 14, 2026</div></div><div class="race-pill">7 wks out</div></div>
+        <div class="race-row"><div><div class="race-name">Ironman 70.3 Texas</div><div class="race-date">Oct 11, 2026</div></div><div class="race-pill">24 wks out</div></div>
+      </div>
+
+      <div class="sec">Garmin connect</div>
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div><div style="font-weight:600;margin-bottom:3px" id="g-status-txt">Not connected</div><div style="font-size:12px;color:var(--text2)" id="g-status-sub">Pending Garmin Developer approval</div></div>
+          <button class="push-btn" onclick="showGarminInfo()">How to connect</button>
+        </div>
+      </div>
+
+      <div class="sec">Health notes</div>
+      <div class="card"><div style="font-size:13px;color:var(--text2);line-height:1.6">Right knee · meniscus history · AI avoids heavy knee loading and flags high-impact substitutions</div></div>
+    </div>
+
+  </div><!-- /pages -->
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showPage('dashboard',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+      <span class="tab-lbl">Today</span>
+    </button>
+    <button class="tab-btn" onclick="showPage('plan',this)">
+      <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+      <span class="tab-lbl">Plan</span>
+    </button>
+    <button class="tab-btn" onclick="showPage('coach',this)" id="tab-coach">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span class="tab-lbl">Coach</span>
+    </button>
+    <button class="tab-btn" onclick="showPage('profile',this)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="tab-lbl">Profile</span>
+    </button>
+  </div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────────────────────
+let athlete = {
+  sex:'Male', gender:'Male', height:'5\'11"', weight:'175 lbs',
+  ftp:268, vo2max:54, thresholdPace:'7:45', css:'1:42',
+  healthNotes:'Right knee, meniscus history',
+  races:[
+    {name:'Houston Tri — Olympic', date:'Jun 14, 2026', weeksOut:7},
+    {name:'Ironman 70.3 Texas',    date:'Oct 11, 2026', weeksOut:24},
+  ],
+};
+try { const s=localStorage.getItem('endure_athlete'); if(s) athlete={...athlete,...JSON.parse(s)}; } catch(e){}
+function saveAthlete(){ try{localStorage.setItem('endure_athlete',JSON.stringify(athlete));}catch(e){} }
+
+const metrics = {
+  ctl:74, atl:81, tsb:-7, weeklyTss:487, tssTarget:520,
+  swim:{val:6200, unit:'yards',    delta:'+800', pct:78, color:'#185FA5'},
+  bike:{val:87,   unit:'miles',    delta:'+12',  pct:68, color:'#378ADD'},
+  run: {val:22,   unit:'miles',    delta:'±0',   pct:55, color:'#85B7EB'},
+  lift:{val:2,    unit:'sessions', delta:'−1',   pct:67, color:'#534AB7'},
+};
+
+// ── NAVIGATION ───────────────────────────────────────────────────────────────
+function showPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  el.classList.add('active');
+  if(id==='coach') setTimeout(()=>{ const m=document.getElementById('chat-msgs'); if(m) m.scrollTop=m.scrollHeight; },60);
+}
+
+// ── METRIC STATUS ────────────────────────────────────────────────────────────
+function metricStatus(key,val){
+  if(key==='atl') return val>100?'bad':val>88?'warn':'ok';
+  if(key==='tsb') return val<-20?'bad':val<-10?'warn':val>15?'warn':'ok';
+  if(key==='weeklyTss'){ const p=val/metrics.tssTarget; return p>1.15?'bad':p>1.05?'warn':'ok'; }
+  return 'ok';
+}
+
+// ── RENDER DASHBOARD ─────────────────────────────────────────────────────────
+function renderStats(){
+  const items=[
+    {key:'ctl',       label:'CTL — Fitness', val:metrics.ctl,       sub:'▲ 3 this week'},
+    {key:'atl',       label:'ATL — Fatigue', val:metrics.atl,       sub:'Acute load'},
+    {key:'tsb',       label:'TSB — Form',    val:(metrics.tsb<0?'−':'')+Math.abs(metrics.tsb), sub:'Building phase', raw:metrics.tsb},
+    {key:'weeklyTss', label:'Weekly TSS',    val:metrics.weeklyTss, sub:`/ ${metrics.tssTarget} target`},
+  ];
+  document.getElementById('stat-grid').innerHTML=items.map(m=>{
+    const s=metricStatus(m.key, m.raw!==undefined?m.raw:m.val);
+    const cls=s==='bad'?'bad':s==='warn'?'warn':'';
+    const prog=m.key==='weeklyTss'?`<div class="prog-track"><div class="prog-fill" style="width:${Math.min(Math.round(metrics.weeklyTss/metrics.tssTarget*100),100)}%"></div></div>`:'';
+    return `<div class="stat-card ${cls}"><div class="s-lbl">${m.label}</div><div class="s-val">${m.val}</div><div class="s-sub">${m.sub}</div>${prog}</div>`;
+  }).join('');
+}
+
+function renderVolume(){
+  const sports=['swim','bike','run','lift'], labels=['Swim','Bike','Run','Lift'];
+  document.getElementById('vol-grid').innerHTML=sports.map((s,i)=>{
+    const d=metrics[s];
+    const num=typeof d.val==='number'&&d.val>=1000?d.val.toLocaleString():d.val;
+    return `<div class="vol-card"><div class="v-sport"><div class="v-dot" style="background:${d.color}"></div>${labels[i]}</div><div class="v-num">${num}</div><div class="v-unit">${d.unit}</div><div class="v-delta">${d.delta} vs last week</div><div class="v-bar"><div class="v-fill" style="width:${d.pct}%;background:${d.color}"></div></div></div>`;
+  }).join('');
+}
+
+// ── RENDER PROFILE ────────────────────────────────────────────────────────────
+function renderAthleteGrid(editing=false){
+  const fields=[{key:'sex',label:'Sex'},{key:'gender',label:'Gender'},{key:'height',label:'Height'},{key:'weight',label:'Weight'}];
+  document.getElementById('athlete-grid').innerHTML=`<div class="pf-grid">${fields.map(f=>`<div class="pf-card"><div class="pf-label">${f.label}</div>${editing?`<input class="pf-input" id="ea-${f.key}" value="${athlete[f.key]}"/>`:`<div class="pf-val" style="font-size:18px">${athlete[f.key]}</div>`}</div>`).join('')}</div>`;
+}
+function renderPerfGrid(editing=false){
+  const fields=[{key:'ftp',label:'FTP',unit:'W'},{key:'vo2max',label:'VO2 Max',unit:'ml/kg'},{key:'thresholdPace',label:'Threshold Pace',unit:'/mi'},{key:'css',label:'CSS Swim',unit:'/100m'}];
+  document.getElementById('perf-grid').innerHTML=`<div class="pf-grid">${fields.map(f=>`<div class="pf-card"><div class="pf-label">${f.label}</div>${editing?`<input class="pf-input" id="ep-${f.key}" value="${athlete[f.key]}"/>`:`<div class="pf-val">${athlete[f.key]} <span style="font-size:13px;color:var(--text3)">${f.unit}</span></div>`}</div>`).join('')}</div>`;
+}
+function renderRunZones(){
+  const p=athlete.thresholdPace.split(':'); const ts=parseInt(p[0])*60+parseInt(p[1]||0);
+  const fmt=s=>`${Math.floor(s/60)}:${Math.round(s%60).toString().padStart(2,'0')}`;
+  const zones=[
+    {name:'Z1 Recovery',  color:'#185FA5', range:`>${fmt(ts*1.35)} /mi`},
+    {name:'Z2 Aerobic',   color:'#185FA5', range:`${fmt(ts*1.16)}–${fmt(ts*1.35)} /mi`},
+    {name:'Z3 Tempo',     color:'#854F0B', range:`${fmt(ts*1.05)}–${fmt(ts*1.16)} /mi`},
+    {name:'Z4 Threshold', color:'#A32D2D', range:`${fmt(ts*0.95)}–${fmt(ts*1.05)} /mi`},
+    {name:'Z5 VO2max',    color:'#A32D2D', range:`<${fmt(ts*0.95)} /mi`},
+  ];
+  document.getElementById('run-zones').innerHTML=zones.map(z=>`<div class="zone-row"><div class="zone-name" style="color:${z.color}">${z.name}</div><div class="zone-range" style="color:${z.color}">${z.range}</div></div>`).join('');
+}
+function renderBikeZones(){
+  const f=parseInt(athlete.ftp);
+  const zones=[
+    {name:'Z1 Recovery',  color:'#185FA5', range:`<${Math.round(f*.55)}W`},
+    {name:'Z2 Endurance', color:'#185FA5', range:`${Math.round(f*.55)}–${Math.round(f*.75)}W`},
+    {name:'Z3 Tempo',     color:'#854F0B', range:`${Math.round(f*.75)}–${Math.round(f*.90)}W`},
+    {name:'Z4 Threshold', color:'#A32D2D', range:`${Math.round(f*.90)}–${Math.round(f*1.05)}W`},
+    {name:'Z5 VO2max',    color:'#A32D2D', range:`>${Math.round(f*1.06)}W`},
+  ];
+  document.getElementById('bike-zones').innerHTML=zones.map(z=>`<div class="zone-row"><div class="zone-name" style="color:${z.color}">${z.name}</div><div class="zone-range" style="color:${z.color}">${z.range}</div></div>`).join('');
+}
+function renderProfile(){ renderAthleteGrid(); renderPerfGrid(); renderRunZones(); renderBikeZones(); }
+
+// ── EDIT / SAVE / CANCEL ──────────────────────────────────────────────────────
+function editSection(sec){
+  if(sec==='athlete'){
+    renderAthleteGrid(true);
+    document.getElementById('athlete-actions').innerHTML=`<div class="sec-actions"><button class="cancel-btn" onclick="cancelEdit('athlete')">Cancel</button><button class="save-btn" onclick="saveSection('athlete')">Save</button></div>`;
+  } else {
+    renderPerfGrid(true);
+    document.getElementById('perf-actions').innerHTML=`<div class="sec-actions"><button class="cancel-btn" onclick="cancelEdit('perf')">Cancel</button><button class="save-btn" onclick="saveSection('perf')">Save</button></div>`;
+  }
+}
+function cancelEdit(sec){
+  if(sec==='athlete'){ renderAthleteGrid(); document.getElementById('athlete-actions').innerHTML=`<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`; }
+  else { renderPerfGrid(); document.getElementById('perf-actions').innerHTML=`<button class="edit-btn" onclick="editSection('perf')">Edit</button>`; }
+}
+function saveSection(sec){
+  if(sec==='athlete'){
+    ['sex','gender','height','weight'].forEach(k=>{ const el=document.getElementById('ea-'+k); if(el) athlete[k]=el.value; });
+    renderAthleteGrid();
+    document.getElementById('athlete-actions').innerHTML=`<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`;
+  } else {
+    ['ftp','vo2max','thresholdPace','css'].forEach(k=>{ const el=document.getElementById('ep-'+k); if(el) athlete[k]=el.value; });
+    renderPerfGrid(); renderRunZones(); renderBikeZones();
+    document.getElementById('perf-actions').innerHTML=`<button class="edit-btn" onclick="editSection('perf')">Edit</button>`;
+    buildSystemPrompt();
+  }
+  saveAthlete();
+}
+
+// ── AI COACH ─────────────────────────────────────────────────────────────────
+let chatHistory=[], chatBusy=false, sysPrompt='';
+
+function buildSystemPrompt(){
+  sysPrompt=`You are Endure AI, an expert triathlon and endurance coach.
+
+Athlete: ${athlete.sex}, ${athlete.height}, ${athlete.weight}
+FTP: ${athlete.ftp}W | Threshold pace: ${athlete.thresholdPace}/mi | CSS: ${athlete.css}/100m | VO2max: ${athlete.vo2max}
+Fitness: CTL ${metrics.ctl}, ATL ${metrics.atl}, TSB ${metrics.tsb}
+Volume this week: ${metrics.swim.val} yds swim, ${metrics.bike.val} mi bike, ${metrics.run.val} mi run, ${metrics.lift.val} strength sessions
+Health: ${athlete.healthNotes}
+Races: Houston Tri Olympic (Jun 14, 7 wks out), Ironman 70.3 Texas (Oct 11, 24 wks out)
+Context: Week 9 of 24. Thursday today — strength day. Friday: run intervals. Saturday: long ride.
+
+Coaching rules:
+- Be direct and specific. Give exact paces, watts, durations, HR ranges.
+- Always account for the right knee/meniscus history on any leg work.
+- For Garmin-ready workouts, list each step: name → duration → zone → pace or watts → HR range.
+- Keep responses concise. Use short bullets for workout steps.
+- Flag proactively if ATL > 100 or TSB < −20.`;
+}
+buildSystemPrompt();
+
+async function sendChat(){
+  const input=document.getElementById('chat-in');
+  const text=input.value.trim();
+  if(!text||chatBusy) return;
+  input.value='';
+  await sendMessage(text);
+}
+async function sendPrompt(text){
+  showPage('coach',document.getElementById('tab-coach'));
+  await new Promise(r=>setTimeout(r,120));
+  await sendMessage(text);
+}
+async function sendMessage(text){
+  if(chatBusy) return;
+  chatBusy=true;
+  const msgs=document.getElementById('chat-msgs');
+  const btn=document.getElementById('send-btn');
+  btn.disabled=true;
+  msgs.innerHTML+=`<div class="msg user"><div class="msg-bubble">${esc(text)}</div></div>`;
+  const tid='t'+Date.now();
+  msgs.innerHTML+=`<div class="msg ai" id="${tid}"><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  chatHistory.push({role:'user',content:text});
+  try {
+    const res=await fetch('/api/claude',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysPrompt,messages:chatHistory}),
+    });
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    const reply=data.content?.[0]?.text||'Something went wrong.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(tid).outerHTML=`<div class="msg ai"><div class="msg-bubble" style="white-space:pre-wrap">${esc(reply)}</div></div>`;
+  } catch(e){
+    document.getElementById(tid).outerHTML=`<div class="msg ai"><div class="msg-bubble" style="color:var(--red)">Connection error — please try again. (${e.message})</div></div>`;
+  }
+  msgs.scrollTop=msgs.scrollHeight;
+  chatBusy=false; btn.disabled=false;
+}
+document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+
+// ── PLAN GENERATOR ────────────────────────────────────────────────────────────
+async function generatePlan(){
+  if(!document.getElementById('fg-race').value){alert('Please select a race type.');return;}
+  const btn=document.getElementById('gen-btn');
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span> Generating...';
+  await new Promise(r=>setTimeout(r,2000));
+  document.getElementById('plan-weeks').innerHTML=`
+    <div class="plan-week-hdr"><span>Week 1 · Base — aerobic foundation</span><span>420 TSS</span></div>
+    ${[['Mon','rest','Rest','Full recovery'],['Tue','swim','Aerobic endurance','2,800 yds · Z2 · CSS drills'],['Wed','bike','Zone 2 ride','90 min · 210–230W · cadence work'],['Thu','lift','Strength A','55 min · upper + core · knee-safe'],['Fri','run','Easy run','40 min · Z2 · <9:15/mi'],['Sat','bike','Long aerobic ride','2h 30m · 215–235W · nutrition practice'],['Sun','run','Long run','75 min · Z2 · easy effort']].map(([d,s,t,m])=>`<div class="plan-session"><div class="ps-day">${d}</div><div class="ps-body"><div class="ps-title">${s!=='rest'?`<span class="badge b-${s}">${s}</span>`:''} ${t}</div><div class="ps-meta">${m}</div></div></div>`).join('')}`;
+  document.getElementById('plan-output').style.display='block';
+  btn.disabled=false; btn.innerHTML='Regenerate plan';
+  document.getElementById('plan-output').scrollIntoView({behavior:'smooth'});
+}
+
+async function pushWorkout(btn){
+  const orig=btn.textContent; btn.disabled=true; btn.textContent='...';
+  await new Promise(r=>setTimeout(r,1000));
+  btn.textContent='✓'; btn.style.color='var(--green)'; btn.style.borderColor='var(--green)';
+}
+async function pushAll(){
+  document.querySelectorAll('.push-btn').forEach(b=>{b.disabled=true;b.textContent='...';});
+  await new Promise(r=>setTimeout(r,1400));
+  document.querySelectorAll('.push-btn').forEach(b=>{b.textContent='✓ Pushed';b.style.color='var(--green)';});
+}
+
+// ── GARMIN ────────────────────────────────────────────────────────────────────
+function showGarminInfo(){
+  alert('Garmin connection requires your Developer Consumer Key and Secret.\n\nOnce your Garmin Developer account is approved, those credentials get added to the app and the Connect button links directly to your Garmin account.');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderStats();
+renderVolume();
+renderProfile();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+</script>
+</body>
+</html>
