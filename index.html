@@ -259,8 +259,10 @@
 
     /* ── DESKTOP SIDEBAR LAYOUT ── */
     @media(min-width:768px){
-      #app{flex-direction:row !important;height:100vh !important;}
+      #app{flex-direction:row !important;height:100vh !important;overflow:hidden;}
       .mobile-topbar,.tab-bar{display:none !important;}
+      /* Ensure sidebar is flush to left edge */
+      #sidebar{position:relative;z-index:10;}
       #sidebar{display:flex !important;flex-direction:column;width:220px;flex-shrink:0;background:var(--bg);border-right:1px solid var(--border2);height:100vh;overflow:hidden;}
       .sidebar-brand{display:flex;align-items:center;gap:9px;padding:22px 18px 18px;border-bottom:1px solid var(--border);flex-shrink:0;}
       .sidebar-brand-name{font-size:16px;font-weight:800;color:var(--blue);}
@@ -273,7 +275,7 @@
       #main-col{display:flex !important;flex-direction:column;flex:1;height:100vh;overflow:hidden;}
       .desktop-header{display:flex !important;align-items:center;justify-content:space-between;padding:0 28px;height:54px;background:var(--bg);border-bottom:1px solid var(--border2);flex-shrink:0;}
       .desktop-page-title{font-size:16px;font-weight:700;color:var(--text);}
-      .desktop-sync-pill{font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;background:var(--green-dim);border:1px solid var(--green-mid);color:var(--green);}
+      .desktop-sync-pill{display:none;}
       #pages{flex:1;overflow:hidden;}
       .page{padding:28px 36px 40px !important;transition:none !important;}
       .page.active{display:block;opacity:1 !important;pointer-events:all !important;transform:none !important;}
@@ -285,6 +287,17 @@
       .chat-input-wrap{padding:12px 28px !important;}
     }
   </style>
+
+<style>
+@media(min-width:768px){
+  .mobile-topbar{display:none !important;}
+  .tab-bar{display:none !important;}
+  #app{flex-direction:row;height:100vh;overflow:hidden;}
+  #sidebar{display:flex !important;flex-direction:column;}
+  #main-col{display:flex !important;flex-direction:column;flex:1;height:100vh;overflow:hidden;}
+  .desktop-header{display:flex !important;}
+}
+</style>
 </head>
 <body>
 <div id="app">
@@ -302,7 +315,7 @@
       </svg>
       <span class="logo-name">Endure AI</span>
     </div>
-    <div class="garmin-pill" id="garmin-pill">Connect Garmin</div>
+    
   </div>
 
 
@@ -329,7 +342,6 @@
   <div id="main-col" style="display:contents">
     <div class="desktop-header" style="display:none" id="desktop-header">
       <span class="desktop-page-title" id="desktop-page-title">Today</span>
-      <span class="desktop-sync-pill">Garmin synced</span>
     </div>
   <div id="pages">
 
