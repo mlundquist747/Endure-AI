@@ -286,6 +286,53 @@
       #chat-msgs{padding:14px 28px !important;}
       .chat-input-wrap{padding:12px 28px !important;}
     }
+
+    /* ── PLAN TAB ── */
+    .plan-hero{background:var(--blue);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;color:#fff;}
+    .plan-hero-title{font-size:18px;font-weight:700;margin-bottom:3px;}
+    .plan-hero-sub{font-size:13px;color:rgba(255,255,255,.75);margin-bottom:14px;}
+    .prog-row{display:flex;align-items:center;gap:10px;}
+    .prog-track{flex:1;height:6px;background:rgba(255,255,255,.2);border-radius:3px;}
+    .prog-fill{height:100%;border-radius:3px;background:#fff;}
+    .prog-pct{font-size:13px;font-weight:600;color:#fff;white-space:nowrap;}
+    .prog-sub{font-size:11px;color:rgba(255,255,255,.7);margin-top:6px;}
+    .plan-tabs{display:flex;border-bottom:1px solid var(--border2);margin-bottom:16px;}
+    .plan-tab{flex:1;padding:9px 0;text-align:center;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;}
+    .plan-tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+    .chart-card{border:1px solid var(--border2);border-radius:var(--r-lg);padding:15px 15px 10px;margin-bottom:12px;}
+    .chart-hdr{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;}
+    .chart-title{font-size:14px;font-weight:700;color:var(--text);}
+    .chart-range{font-size:11px;color:var(--text3);}
+    .chart-vals{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+    .chart-start{font-size:12px;color:var(--text3);}
+    .chart-now{font-size:24px;font-weight:700;color:var(--blue);}
+    .chart-delta{font-size:12px;font-weight:600;padding:2px 9px;border-radius:20px;background:var(--green-dim);color:var(--green);}
+    .chart-proj{font-size:11px;color:var(--text3);margin-bottom:8px;}
+    .metric-table{width:100%;border-collapse:collapse;}
+    .metric-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+    .metric-row:last-child{border-bottom:none;}
+    .metric-row:hover{background:var(--bg2);}
+    .metric-row.sel{background:var(--blue-pale);}
+    .metric-row td{padding:10px;font-size:13px;vertical-align:middle;}
+    .metric-row.sel td{color:var(--blue2);font-weight:500;}
+    .m-label{display:flex;align-items:center;gap:7px;color:var(--text2);}
+    .m-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--blue);}
+    .m-val{text-align:center;font-weight:600;color:var(--text);white-space:nowrap;}
+    .m-badge{text-align:right;}
+    .trend-up-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--green-dim);color:var(--green);}
+    .week-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+    .week-row:last-child{border-bottom:none;}
+    .wk-num{font-size:11px;font-weight:600;color:var(--text3);width:36px;flex-shrink:0;}
+    .wk-body{flex:1;}
+    .wk-phase{font-size:13px;font-weight:600;}
+    .wk-meta{font-size:11px;color:var(--text2);margin-top:1px;}
+    .wk-done{width:20px;height:20px;border-radius:50%;background:var(--green-dim);border:1px solid var(--green-mid);display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;}
+    .wk-active{width:20px;height:20px;border-radius:50%;background:var(--blue-pale);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--blue);flex-shrink:0;}
+    .wk-future{width:20px;height:20px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);flex-shrink:0;}
+    .d-cols{display:block;}
+    .btn-outline{width:100%;padding:13px;font-size:15px;font-weight:600;background:var(--bg);border:1.5px solid var(--blue);color:var(--blue);border-radius:var(--r);cursor:pointer;font-family:'Figtree',sans-serif;}
+    @media(min-width:768px){.d-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px;}}
+
   </style>
 
 <style>
@@ -390,79 +437,71 @@
 
     <!-- ══ PLAN ══ -->
     <div class="page" id="p-plan">
-      <div class="sec-h1">Training plan</div>
-      <div class="page-sub">AI-built workouts pushed to your Garmin</div>
-      <div class="info-box">Structured workouts include step-by-step targets. Your watch guides each interval with real-time pace and HR alerts.</div>
+        <div class="sec-h1">Training plan</div>
 
-      <div class="sec">Goal race</div>
-      <div class="card">
-        <div class="form-group">
-          <div class="form-label">Race type</div>
-          <select id="fg-race">
-            <option value="">Select race type...</option>
-            <option value="sprint_triathlon">Sprint Triathlon</option>
-            <option value="olympic_triathlon">Olympic Triathlon</option>
-            <option value="70.3_triathlon">70.3 Triathlon (Half Iron)</option>
-            <option value="140.6_triathlon">140.6 Triathlon (Full Iron)</option>
-            <option value="half_marathon">Half Marathon</option>
-            <option value="marathon">Marathon</option>
-            <option value="bike_race">Bike Race</option>
-            <option value="bike_ftp_build">Bike FTP Build (no race)</option>
-          </select>
+        <div class="plan-hero">
+          <div class="plan-hero-title">Ironman 70.3 Texas &mdash; 16 weeks</div>
+          <div class="plan-hero-sub">Oct 11, 2026 &middot; Build phase &middot; Week 9 of 16</div>
+          <div class="prog-row">
+            <div class="prog-track"><div class="prog-fill" style="width:56%"></div></div>
+            <div class="prog-pct">56% complete</div>
+          </div>
+          <div class="prog-sub">9 weeks done &middot; 7 weeks remaining</div>
         </div>
-        <div class="form-group">
-          <div class="form-label">Event date</div>
-          <input type="date" id="fg-date"/>
-        </div>
-        <div class="form-group">
-          <div class="form-label">Plan length</div>
-          <select id="fg-weeks">
-            <option value="8">8 weeks</option>
-            <option value="12">12 weeks</option>
-            <option value="16" selected>16 weeks</option>
-            <option value="20">20 weeks</option>
-            <option value="24">24 weeks</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <div class="form-label">Training days per week</div>
-          <input type="number" id="fg-days" value="5" min="3" max="7"/>
-        </div>
-        <div class="form-group" style="margin-bottom:16px">
-          <div class="form-label">Preferences &amp; notes</div>
-          <textarea id="fg-prefs" placeholder="e.g. Long rides on Saturdays, run intervals on Fridays, two strength sessions per week, avoid back-to-back hard days..."></textarea>
-        </div>
-        <button class="btn-primary" id="gen-btn" onclick="generatePlan()">Generate training plan</button>
-      </div>
 
-      <div class="sec">Sample — Friday interval run</div>
-      <div class="wk-card">
-        <div class="wk-top">
-          <div><span class="badge b-run">Run</span><div class="wk-title">4×8 min threshold</div></div>
-          <div style="text-align:right"><span class="badge b-swim" style="background:var(--green-dim);color:var(--green);border:none">Garmin ready</span><div style="font-size:11px;color:var(--text2);margin-top:5px">70 min</div></div>
+        <div class="plan-tabs">
+          <div class="plan-tab active" onclick="switchPlanTab('progress',this)">Progress</div>
+          <div class="plan-tab" onclick="switchPlanTab('weeks',this)">Schedule</div>
         </div>
-        <div class="wk-meta">Auto-alerts fire on watch · pace targets each rep · loops 4×</div>
-        <div class="step-list">
-          <div class="step"><div class="step-ico sz2">W</div><div class="step-body"><div class="step-name">Warm-up</div><div class="step-detail">15 min easy jog</div><div class="step-target tz2">Z2 · &lt;9:15/mi · HR &lt;140</div></div></div>
-          <div class="step"><div class="step-ico sz3">D</div><div class="step-body"><div class="step-name">Drills + strides</div><div class="step-detail">4 min activation</div><div class="step-target tz3">Alert: intervals in 60 sec</div></div></div>
-          <div class="step"><div class="step-ico sz4">1–4</div><div class="step-body"><div class="step-name">4× Intervals</div><div class="step-detail">8 min hard / 2 min recovery × 4</div><div class="step-target tz4">Z4 · 7:10–8:00/mi · HR 165–172</div></div></div>
-          <div class="step"><div class="step-ico sz1">C</div><div class="step-body"><div class="step-name">Cool-down</div><div class="step-detail">10 min easy</div><div class="step-target tz1">Z1 · HR dropping</div></div></div>
-        </div>
-      </div>
 
-      <div id="plan-output" style="display:none">
-        <div class="sec">Generated plan — week 1</div>
-        <div class="card" id="plan-weeks"></div>
-        <div class="sec">Push this week to Garmin</div>
-        <div class="card">
-          <div class="push-row"><div><div class="push-day">Friday</div><div class="push-meta">Run · 4×8 min threshold · 70 min</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Saturday</div><div class="push-meta">Bike · Long aerobic ride · 3h 30m · 220–240W</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Sunday</div><div class="push-meta">Run · Easy long run · 90 min · Z2</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Tuesday</div><div class="push-meta">Swim · Threshold sets · 3,200 yds</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <button class="push-all" onclick="pushAll()">Push full week to Garmin</button>
+        <div id="plan-progress">
+          <div class="d-cols">
+            <div>
+              <div class="sec-h2">Performance trend</div>
+              <div class="chart-card">
+                <div class="chart-hdr">
+                  <div class="chart-title" id="chart-title">FTP (cycling)</div>
+                  <div class="chart-range">Wk 1 &rarr; Wk 16</div>
+                </div>
+                <div class="chart-vals">
+                  <span class="chart-start" id="chart-start">Start: 256W</span>
+                  <span class="chart-now" id="chart-now">268W</span>
+                  <span class="chart-delta" id="chart-delta">+12W &uarr;</span>
+                </div>
+                <div class="chart-proj" id="chart-proj">Projected at race day: ~282W</div>
+                <svg id="chart-svg" width="100%" viewBox="0 0 380 70" preserveAspectRatio="none" style="display:block;margin-top:8px">
+                  <line x1="0" y1="0" x2="380" y2="0" stroke="#eee" stroke-width="0.5"/>
+                  <line x1="0" y1="35" x2="380" y2="35" stroke="#eee" stroke-width="0.5"/>
+                  <line x1="0" y1="70" x2="380" y2="70" stroke="#eee" stroke-width="0.5"/>
+                  <polygon id="chart-area" points="0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28 297,70 0,70" fill="#185FA5" opacity="0.07"/>
+                  <polyline id="chart-line" points="0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28" fill="none" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polyline id="chart-proj-line" points="297,28 340,22 380,16" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.35"/>
+                  <line x1="297" y1="0" x2="297" y2="70" stroke="#185FA5" stroke-width="1" stroke-dasharray="3 2" opacity="0.25"/>
+                  <circle id="chart-dot" cx="297" cy="28" r="5" fill="#185FA5"/>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:5px">
+                  <span>Wk 1</span><span>Wk 4</span><span>Wk 7</span><span>Wk 9</span><span>Wk 12</span><span>Wk 16</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="sec-h2">Metrics &mdash; tap to explore</div>
+              <div class="card" style="padding:4px 6px">
+                <table class="metric-table" style="width:100%"><tbody id="metric-rows"></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="plan-weeks" style="display:none">
+          <div class="sec-h2">Full schedule</div>
+          <div class="card" style="padding:4px 14px" id="weeks-list"></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <button class="btn-outline" onclick="sendPrompt('I want to create a new training plan. What options do I have?')">+ Create new plan</button>
         </div>
       </div>
-    </div>
 
     <!-- ══ COACH ══ -->
     <div class="page" id="p-coach">
@@ -576,8 +615,9 @@ const metrics = {
 function showPage(id,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(t=>t.classList.remove('active'));
-  document.getElementById('p-'+id).classList.add('active');
-  el.classList.add('active');
+  const pg=document.getElementById('p-'+id);
+  if(pg) pg.classList.add('active');
+  if(el) el.classList.add('active');
   if(id==='coach') setTimeout(()=>{ const m=document.getElementById('chat-msgs'); if(m) m.scrollTop=m.scrollHeight; },60);
 }
 
@@ -773,9 +813,55 @@ function showGarminInfo(){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+
+// ── PLAN TAB ──────────────────────────────────────────────────────────────────
+const PM=[
+  {l:'FTP (cycling)',s:'Start: 256W',n:'268W',d:'+12W ↑',p:'Projected at race day: ~282W',line:'0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28',proj:'297,28 340,22 380,16',area:'0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28 297,70 0,70',dot:[297,28]},
+  {l:'Threshold pace',s:'Start: 8:03/mi',n:'7:45/mi',d:'−18s ↑',p:'Projected: ~7:28/mi',line:'0,20 42,24 84,30 126,37 168,44 210,49 252,55 297,60',proj:'297,60 340,64 380,68',area:'0,20 42,24 84,30 126,37 168,44 210,49 252,55 297,60 297,70 0,70',dot:[297,60]},
+  {l:'CSS swim pace',s:'Start: 1:46/100m',n:'1:42/100m',d:'−4s ↑',p:'Projected: ~1:38/100m',line:'0,15 42,20 84,26 126,33 168,40 210,46 252,52 297,57',proj:'297,57 340,62 380,66',area:'0,15 42,20 84,26 126,33 168,40 210,46 252,52 297,57 297,70 0,70',dot:[297,57]},
+  {l:'CTL (fitness)',s:'Start: 52',n:'74',d:'+22 pts ↑',p:'Target at race day: ~90',line:'0,68 42,63 84,57 126,52 168,46 210,40 252,34 297,28',proj:'297,28 340,20 380,14',area:'0,68 42,63 84,57 126,52 168,46 210,40 252,34 297,28 297,70 0,70',dot:[297,28]},
+  {l:'Weekly run miles',s:'Start: 16 mi/wk',n:'22 mi/wk',d:'+6 mi ↑',p:'Peak: ~26 mi/wk (wk 13)',line:'0,65 42,62 84,58 126,54 168,49 210,44 252,39 297,34',proj:'297,34 340,28 380,32',area:'0,65 42,62 84,58 126,54 168,49 210,44 252,39 297,34 297,70 0,70',dot:[297,34]},
+  {l:'Weekly bike miles',s:'Start: 62 mi/wk',n:'87 mi/wk',d:'+25 mi ↑',p:'Peak: ~105 mi/wk (wk 13)',line:'0,68 42,64 84,59 126,53 168,47 210,41 252,35 297,29',proj:'297,29 340,22 380,26',area:'0,68 42,64 84,59 126,53 168,47 210,41 252,35 297,29 297,70 0,70',dot:[297,29]},
+  {l:'Weekly swim yards',s:'Start: 4,200 yds',n:'6,200 yds',d:'+2k yds ↑',p:'Peak: ~7,200 yds (wk 13)',line:'0,66 42,62 84,57 126,52 168,46 210,40 252,34 297,29',proj:'297,29 340,23 380,27',area:'0,66 42,62 84,57 126,52 168,46 210,40 252,34 297,29 297,70 0,70',dot:[297,29]},
+];
+let selM=0;
+function renderMetricRows(){
+  const tb=document.getElementById('metric-rows');
+  if(!tb) return;
+  tb.innerHTML=PM.map((m,i)=>`<tr class="metric-row${i===selM?' sel':''}" onclick="selMetric(${i})"><td><div class="m-label"><div class="m-dot" style="opacity:${i===selM?1:.35}"></div>${m.l}</div></td><td class="m-val">${m.n}</td><td class="m-badge"><span class="trend-up-badge">${m.d}</span></td></tr>`).join('');
+}
+function selMetric(i){
+  selM=i;const m=PM[i];
+  document.getElementById('chart-title').textContent=m.l;
+  document.getElementById('chart-start').textContent=m.s;
+  document.getElementById('chart-now').textContent=m.n;
+  document.getElementById('chart-delta').textContent=m.d;
+  document.getElementById('chart-proj').textContent=m.p;
+  document.getElementById('chart-line').setAttribute('points',m.line);
+  document.getElementById('chart-proj-line').setAttribute('points',m.proj);
+  document.getElementById('chart-area').setAttribute('points',m.area);
+  document.getElementById('chart-dot').setAttribute('cx',m.dot[0]);
+  document.getElementById('chart-dot').setAttribute('cy',m.dot[1]);
+  renderMetricRows();
+}
+function renderWeeks(){
+  const el=document.getElementById('weeks-list');
+  if(!el) return;
+  const w=[['done','✓','Base — aerobic foundation','380 TSS · 16 mi run · 62 mi bike · 4,200 yds'],['done','✓','Base — volume increase','410 TSS · 18 mi run · 68 mi bike · 4,800 yds'],['done','✓','Base — intensity intro','440 TSS · 19 mi run · 72 mi bike · 5,200 yds'],['done','✓','Recovery week','280 TSS · 14 mi run · 50 mi bike · 3,800 yds'],['done','✓','Build — threshold work','470 TSS · 20 mi run · 78 mi bike · 5,600 yds'],['done','✓','Build — long efforts','490 TSS · 21 mi run · 82 mi bike · 5,800 yds'],['done','✓','Build — race simulation','510 TSS · 22 mi run · 85 mi bike · 6,000 yds'],['done','✓','Recovery week','310 TSS · 16 mi run · 55 mi bike · 4,200 yds'],['active','9','Build — peak volume','520 TSS · 22 mi run · 87 mi bike · 6,200 yds'],['future','','Build — VO2max work','530 TSS · 23 mi run · 90 mi bike · 6,400 yds'],['future','','Build — race pace focus','540 TSS · 24 mi run · 92 mi bike'],['future','','Recovery week','320 TSS · 17 mi run · 58 mi bike'],['future','','Peak — race simulation','550 TSS target'],['future','','Peak — final hard week','540 TSS target'],['future','','Taper — begin','380 TSS target'],['future','','Taper — race week','Race day: Oct 11']];
+  el.innerHTML=w.map((x,i)=>`<div class="week-row"><div class="wk-${x[0]}">${x[1]}</div><div class="wk-num" style="${x[0]==='active'?'color:var(--blue)':''}"">Wk ${i+1}</div><div class="wk-body"><div class="wk-phase" style="${x[0]==='future'?'color:var(--text3)':x[0]==='active'?'color:var(--blue)':''}">${x[2]}</div><div class="wk-meta" style="${x[0]==='future'?'color:var(--text3)':''}">${x[3]}</div></div></div>`).join('');
+}
+function switchPlanTab(tab,el){
+  document.querySelectorAll('.plan-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('plan-progress').style.display=tab==='progress'?'block':'none';
+  document.getElementById('plan-weeks').style.display=tab==='weeks'?'block':'none';
+}
+
 renderStats();
 renderVolume();
 renderProfile();
+renderMetricRows();
+renderWeeks();
 renderHealthNotes(false);
 initDesktop();
 window.addEventListener('resize', initDesktop);
