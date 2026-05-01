@@ -1,999 +1,1060 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Endure AI" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+  <meta name="apple-mobile-web-app-title" content="Endure AI"/>
+  <meta name="theme-color" content="#185FA5"/>
   <title>Endure AI</title>
-  <link rel="manifest" href="/manifest.json" />
-  <link rel="apple-touch-icon" href="/icon-192.png" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="/manifest.json"/>
+  <link rel="apple-touch-icon" href="/icon-192.png"/>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #ffffff;
-      --bg2: #f5f5f5;
-      --bg3: #eeeeee;
-      --bg4: #e0e0e0;
-      --border: rgba(0,0,0,0.08);
-      --border2: rgba(0,0,0,0.15);
-      --text: #111111;
-      --text2: #555555;
-      --text3: #999999;
-      --green: #00a859;
-      --green2: #007a40;
-      --green-dim: rgba(0,168,89,0.08);
-      --amber: #e07800;
-      --amber-dim: rgba(224,120,0,0.09);
-      --red: #d42b2b;
-      --red-dim: rgba(212,43,43,0.08);
-      --blue: #1a6fb5;
-      --blue-dim: rgba(26,111,181,0.08);
-      --purple: #6b44c4;
-      --purple-dim: rgba(107,68,196,0.08);
-      --r: 10px;
-      --r-lg: 16px;
-      --safe-top: env(safe-area-inset-top, 44px);
-      --safe-bot: env(safe-area-inset-bottom, 20px);
+      --blue:       #185FA5;
+      --blue2:      #0C447C;
+      --blue-lt:    #378ADD;
+      --blue-dim:   rgba(24,95,165,0.08);
+      --blue-dim2:  rgba(24,95,165,0.14);
+      --blue-mid:   #B5D4F4;
+      --blue-pale:  #E6F1FB;
+      --purple:     #534AB7;
+      --purple-dim: #EEEDFE;
+      --green:      #3B6D11;
+      --green-dim:  #EAF3DE;
+      --green-mid:  #C0DD97;
+      --red:        #A32D2D;
+      --red-dim:    #FCEBEB;
+      --amber:      #854F0B;
+      --amber-dim:  #FAEEDA;
+      --text:       #111111;
+      --text2:      #555555;
+      --text3:      #999999;
+      --border:     rgba(0,0,0,0.08);
+      --border2:    rgba(0,0,0,0.15);
+      --bg:         #ffffff;
+      --bg2:        #f6f7f9;
+      --bg3:        #eef0f3;
+      --r:          10px;
+      --r-lg:       14px;
+      --safe-top:   env(safe-area-inset-top, 0px);
+      --safe-bot:   env(safe-area-inset-bottom, 0px);
+      --sidebar-w:  220px;
+      --topbar-h:   52px;
+      --tabbar-h:   56px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
     html, body {
-      height: 100%; height: 100dvh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Barlow', sans-serif;
-      font-size: 15px;
-      -webkit-font-smoothing: antialiased;
+      height: 100%; background: var(--bg2);
+      color: var(--text); font-family: 'Figtree', sans-serif;
+      font-size: 15px; -webkit-font-smoothing: antialiased;
       overscroll-behavior: none;
     }
 
-    #app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
-
-    .status-bar {
-      height: var(--safe-top);
-      background: #fff;
-      flex-shrink: 0;
+    /* ── SECTION HEADERS — bolder, larger ── */
+    .sec-header {
+      font-size: 18px; font-weight: 800;
+      color: var(--text); letter-spacing: -0.01em;
+      margin: 28px 0 12px;
     }
+    .sec-header:first-child { margin-top: 0; }
+    .sec-label {
+      font-size: 10px; font-weight: 600;
+      color: var(--text3); text-transform: uppercase;
+      letter-spacing: 0.09em; margin: 16px 0 8px;
+    }
+    .sec-label:first-child { margin-top: 0; }
 
-    /* ── HEADER BAR ── */
+    /* ── LAYOUT: MOBILE ── */
+    #app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+    .status-bar { height: var(--safe-top); background: var(--blue); flex-shrink: 0; }
+
     .top-bar {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 18px;
-      height: 48px;
-      background: #fff;
-      border-bottom: 1.5px solid #111;
-      flex-shrink: 0;
+      padding: 0 18px; height: var(--topbar-h);
+      background: var(--blue); flex-shrink: 0;
     }
-    .top-logo {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 22px; font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #111;
-      display: flex; align-items: center; gap: 7px;
-    }
-    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .logo { display: flex; align-items: center; gap: 9px; }
+    .logo-name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.01em; }
     .garmin-pill {
-      font-size: 11px; font-family: 'DM Mono', monospace;
-      padding: 4px 10px; border-radius: 20px;
-      border: 1px solid var(--border2);
-      color: var(--text2); background: var(--bg2);
-      cursor: pointer;
+      font-size: 11px; font-weight: 500; padding: 4px 11px;
+      border-radius: 20px; border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85); cursor: pointer;
     }
-    .garmin-pill.connected { border-color: var(--green2); color: var(--green2); background: var(--green-dim); }
 
-    /* ── PAGES ── */
     #pages { flex: 1; overflow: hidden; position: relative; }
     .page {
       position: absolute; inset: 0;
       overflow-y: auto; -webkit-overflow-scrolling: touch;
-      padding: 18px 16px 100px;
+      padding: 20px 18px 100px;
       opacity: 0; pointer-events: none;
-      transform: translateY(8px);
+      transform: translateY(6px);
       transition: opacity 0.18s ease, transform 0.18s ease;
     }
     .page.active { opacity: 1; pointer-events: all; transform: translateY(0); }
 
-    /* ── TAB BAR ── */
     .tab-bar {
-      display: flex;
-      background: #fff;
-      border-top: 1.5px solid #111;
-      padding-bottom: var(--safe-bot);
-      flex-shrink: 0;
+      display: flex; background: var(--bg);
+      border-top: 1px solid var(--border2);
+      padding-bottom: var(--safe-bot); flex-shrink: 0;
+      height: var(--tabbar-h);
     }
     .tab-btn {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 3px; padding: 9px 0;
-      background: none; border: none; cursor: pointer;
+      gap: 3px; background: none; border: none; cursor: pointer;
       color: var(--text3); transition: color 0.15s;
-      font-family: 'Barlow', sans-serif;
     }
-    .tab-btn.active { color: var(--green2); }
-    .tab-btn svg { width: 22px; height: 22px; stroke-width: 2; fill: none; stroke: currentColor; }
-    .tab-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'DM Mono', monospace; }
+    .tab-btn.active { color: var(--blue); }
+    .tab-btn svg { width: 22px; height: 22px; stroke-width: 1.8; fill: none; stroke: currentColor; }
+    .tab-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
 
-    /* ── TYPOGRAPHY ── */
-    .page-title { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; margin-bottom: 2px; }
-    .page-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
-    .section-label {
-      font-size: 10px; font-family: 'DM Mono', monospace;
-      color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em;
-      margin-bottom: 8px; margin-top: 20px;
-      padding-bottom: 6px; border-bottom: 1px solid var(--border);
+    /* ── LAYOUT: DESKTOP (Chrome web app) ── */
+    @media (min-width: 768px) {
+      .status-bar { display: none; }
+      #app { flex-direction: row; height: 100vh; }
+
+      /* Sidebar replaces tab bar */
+      .tab-bar {
+        flex-direction: column; width: var(--sidebar-w);
+        height: 100%; border-top: none; border-right: 1px solid var(--border2);
+        padding: 0; order: -1; gap: 0;
+      }
+      .sidebar-logo {
+        display: flex; align-items: center; gap: 9px;
+        padding: 20px 18px 16px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .sidebar-logo-name { font-size: 16px; font-weight: 700; color: var(--blue); }
+      .tab-btn {
+        flex: 0; flex-direction: row; justify-content: flex-start;
+        gap: 10px; padding: 13px 18px;
+        border-radius: 0; border-left: 3px solid transparent;
+      }
+      .tab-btn.active {
+        color: var(--blue); background: var(--blue-pale);
+        border-left-color: var(--blue);
+      }
+      .tab-btn svg { width: 18px; height: 18px; }
+      .tab-lbl { font-size: 13px; font-weight: 500; text-transform: none; letter-spacing: 0; }
+      .sidebar-bottom {
+        margin-top: auto; padding: 14px 18px;
+        border-top: 1px solid var(--border);
+      }
+      .fitness-connect-pill {
+        font-size: 12px; font-weight: 500; color: var(--blue);
+        background: var(--blue-pale); border: 1px solid var(--blue-mid);
+        border-radius: var(--r); padding: 8px 12px; cursor: pointer;
+        width: 100%; text-align: left;
+      }
+
+      /* Main content area */
+      .main-area {
+        flex: 1; display: flex; flex-direction: column;
+        overflow: hidden; height: 100vh;
+      }
+      /* Top bar becomes a header strip */
+      .top-bar {
+        height: 56px; border-bottom: 1px solid var(--border2);
+        background: var(--bg); padding: 0 28px;
+      }
+      .logo { display: none; }
+      .page-title-bar {
+        font-size: 15px; font-weight: 700; color: var(--text);
+      }
+      .garmin-pill {
+        border-color: var(--border2); color: var(--text2);
+        background: var(--bg2);
+      }
+
+      /* Pages fill remaining height */
+      #pages { flex: 1; }
+      .page {
+        padding: 28px 36px 40px;
+        display: none;
+      }
+      .page.active { display: block; opacity: 1; pointer-events: all; transform: none; }
+
+      /* Two-column layout for wide screens */
+      .desktop-cols {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      }
+      .desktop-cols-3 {
+        display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px;
+      }
+      .desktop-full { grid-column: 1 / -1; }
     }
-    .section-label:first-of-type { margin-top: 0; }
 
     /* ── CARDS ── */
-    .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 16px; margin-bottom: 12px; }
-    .card-white { background: #fff; border: 1.5px solid #111; border-radius: var(--r-lg); padding: 16px; margin-bottom: 12px; }
+    .card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 16px; margin-bottom: 12px; }
+    .card-flat { background: var(--bg2); border-radius: var(--r-lg); padding: 16px; margin-bottom: 12px; }
 
-    /* ── METRIC STATUS COLORS ── */
-    .status-ok { color: var(--green2); }
-    .status-warn { color: var(--amber); }
-    .status-bad { color: var(--red); }
-    .bg-ok { background: var(--green-dim); border-color: rgba(0,168,89,0.25); }
-    .bg-warn { background: var(--amber-dim); border-color: rgba(224,120,0,0.25); }
-    .bg-bad { background: var(--red-dim); border-color: rgba(212,43,43,0.25); }
+    /* ── PLAN HERO ── */
+    .plan-hero { background: var(--blue); border-radius: var(--r-lg); padding: 18px; margin-bottom: 12px; color: #fff; }
+    .plan-hero-title { font-size: 18px; font-weight: 700; margin-bottom: 3px; }
+    .plan-hero-sub { font-size: 13px; color: rgba(255,255,255,0.75); margin-bottom: 14px; }
+    .prog-row { display: flex; align-items: center; gap: 10px; }
+    .prog-track { flex: 1; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+    .prog-fill { height: 100%; border-radius: 3px; background: #fff; }
+    .prog-pct { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; }
+    .prog-sub { font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 6px; }
 
-    /* ── METRICS ── */
-    .metrics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
-    .metric-card {
-      border: 1.5px solid var(--border2); border-radius: var(--r);
-      padding: 14px; transition: border-color 0.2s, background 0.2s;
-    }
-    .metric-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 5px; }
-    .metric-val { font-family: 'Barlow Condensed', sans-serif; font-size: 34px; font-weight: 800; line-height: 1; }
-    .metric-sub { font-size: 11px; color: var(--text2); margin-top: 4px; font-family: 'DM Mono', monospace; }
-    .metric-delta { font-size: 11px; font-family: 'DM Mono', monospace; margin-top: 3px; font-weight: 500; }
+    /* ── STAT GRID ── */
+    .stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; margin-bottom: 12px; }
+    .stat-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px 14px; }
+    .stat-card.warn { background: var(--amber-dim); border-color: rgba(133,79,11,0.25); }
+    .stat-card.bad  { background: var(--red-dim);   border-color: rgba(163,45,45,0.25); }
+    .s-lbl { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+    .s-val { font-size: 30px; font-weight: 700; color: var(--text); line-height: 1; }
+    .stat-card.warn .s-val { color: var(--amber); }
+    .stat-card.bad  .s-val { color: var(--red); }
+    .s-sub { font-size: 11px; color: var(--text2); margin-top: 4px; }
+    .prog-bar-sm { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 8px; }
+    .prog-bar-fill { height: 100%; border-radius: 2px; background: var(--blue); }
 
-    /* ── VOLUME ── */
-    .volume-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
-    .vol-card { border: 1.5px solid var(--border2); border-radius: var(--r); padding: 13px; transition: border-color 0.2s, background 0.2s; }
-    .vol-sport { font-size: 10px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 7px; display: flex; align-items: center; gap: 6px; color: var(--text2); }
-    .vol-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
-    .vol-num { font-family: 'Barlow Condensed', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; color: var(--text); }
-    .vol-unit { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); margin-top: 2px; }
-    .vol-delta { font-size: 10px; color: var(--text3); margin-top: 7px; font-family: 'DM Mono', monospace; }
-    .vol-bar { height: 3px; background: var(--bg4); border-radius: 2px; margin-top: 10px; }
-    .vol-fill { height: 100%; border-radius: 2px; }
+    /* ── VOLUME GRID ── */
+    .vol-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; margin-bottom: 12px; }
+    .vol-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px 14px; }
+    .v-sport { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; display: flex; align-items: center; gap: 5px; }
+    .v-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .v-num { font-size: 26px; font-weight: 700; color: var(--text); line-height: 1; }
+    .v-unit { font-size: 10px; color: var(--text3); margin-top: 2px; }
+    .v-delta { font-size: 10px; color: var(--text2); margin-top: 7px; }
+    .v-bar { height: 3px; background: var(--bg3); border-radius: 2px; margin-top: 9px; }
+    .v-fill { height: 100%; border-radius: 2px; }
 
     /* ── WEEK STRIP ── */
-    .week-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; margin-bottom: 4px; }
+    .week-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; }
     .week-strip::-webkit-scrollbar { display: none; }
-    .day-pill { flex-shrink: 0; width: 44px; border: 1.5px solid var(--border2); border-radius: var(--r); padding: 8px 4px; text-align: center; background: #fff; }
-    .day-pill.today { border-color: #111; border-width: 2px; }
-    .day-pill.rest { background: var(--bg2); }
-    .day-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
-    .day-ico { font-size: 17px; line-height: 1; margin-bottom: 3px; }
-    .day-pip-row { display: flex; gap: 2px; justify-content: center; margin-top: 4px; }
+    .day-card { flex-shrink: 0; width: 52px; background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 9px 5px 8px; text-align: center; cursor: pointer; }
+    .day-card.today { border-color: var(--blue); border-width: 1.5px; }
+    .day-card.rest { background: var(--bg2); opacity: 0.55; }
+    .d-lbl { font-size: 9px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+    .d-ico { font-size: 17px; line-height: 1; margin-bottom: 4px; }
+    .d-type { font-size: 9px; font-weight: 600; color: var(--text2); line-height: 1.2; margin-bottom: 2px; }
+    .d-detail { font-size: 9px; color: var(--text3); line-height: 1.2; }
+    .d-pips { display: flex; gap: 2px; justify-content: center; margin-top: 5px; }
     .pip { width: 4px; height: 4px; border-radius: 50%; }
 
-    /* ── AI BOX ── */
-    .ai-box { border: 2px solid #111; border-radius: var(--r-lg); padding: 16px; margin-bottom: 4px; background: #fff; position: relative; overflow: hidden; }
-    .ai-box-accent { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); }
-    .ai-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-    .ai-pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(0,168,89,.4); } 50% { box-shadow: 0 0 0 5px rgba(0,168,89,0); } }
-    .ai-lbl { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--green2); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 500; }
-    .ai-text { font-size: 14px; line-height: 1.6; margin-bottom: 14px; color: var(--text); }
-    .chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    .chip { font-size: 12px; padding: 6px 13px; border-radius: 20px; border: 1.5px solid var(--border2); background: #fff; color: var(--text2); cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: 'Barlow', sans-serif; font-weight: 500; }
-    .chip:active { background: var(--green-dim); border-color: var(--green2); color: var(--green2); }
+    /* ── INSIGHT CARD ── */
+    .insight-card { background: var(--bg); border: 1px solid var(--border2); border-left: 3px solid var(--blue); border-radius: var(--r-lg); padding: 15px 16px; margin-bottom: 12px; }
+    .ins-hdr { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; }
+    .ins-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(24,95,165,.35); } 50% { box-shadow: 0 0 0 5px rgba(24,95,165,0); } }
+    .ins-lbl { font-size: 10px; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: 0.09em; }
+    .ins-text { font-size: 14px; color: var(--text); line-height: 1.6; margin-bottom: 13px; }
+    .chips { display: flex; gap: 7px; flex-wrap: wrap; }
+    .chip { font-size: 12px; font-weight: 500; padding: 6px 12px; border-radius: 20px; border: 1px solid var(--blue-mid); background: var(--blue-pale); color: var(--blue2); cursor: pointer; white-space: nowrap; }
+    .chip:active { background: var(--blue-dim2); }
+
+    /* ── SESSION CARD ── */
+    .sessions-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r-lg); overflow: hidden; margin-bottom: 12px; }
+    .sess-hdr { padding: 11px 15px; border-bottom: 1px solid var(--border); background: var(--bg2); display: flex; justify-content: space-between; align-items: center; }
+    .sess-hdr-title { font-size: 13px; font-weight: 700; }
+    .sess-hdr-sub { font-size: 11px; color: var(--text2); }
+    .sess-row { display: flex; align-items: center; gap: 10px; padding: 12px 15px; border-bottom: 1px solid var(--border); }
+    .sess-row:last-child { border-bottom: none; }
+    .sess-day { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; width: 24px; flex-shrink: 0; }
+    .sess-body { flex: 1; min-width: 0; }
+    .sess-name { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+    .sess-meta { font-size: 11px; color: var(--text2); }
+    .detail-btn { font-size: 11px; font-weight: 600; color: var(--blue); border: 1px solid var(--blue-mid); background: var(--blue-pale); border-radius: 8px; padding: 5px 10px; white-space: nowrap; cursor: pointer; flex-shrink: 0; }
 
     /* ── BADGES ── */
-    .badge { font-size: 10px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 8px; border-radius: 6px; display: inline-block; font-weight: 500; }
-    .b-run { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(224,120,0,.3); }
-    .b-bike { background: var(--green-dim); color: var(--green2); border: 1px solid rgba(0,168,89,.3); }
-    .b-swim { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(26,111,181,.3); }
-    .b-lift { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(107,68,196,.3); }
-    .b-garmin { background: var(--green-dim); color: var(--green2); border: 1px solid rgba(0,168,89,.3); }
+    .badge { font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .b-swim { background: var(--blue-pale); color: var(--blue2); }
+    .b-bike { background: var(--green-dim); color: var(--green); }
+    .b-run  { background: var(--blue-pale); color: var(--blue); }
+    .b-lift { background: var(--purple-dim); color: var(--purple); }
 
-    /* ── WORKOUT CARD ── */
-    .wk-card { border: 1.5px solid var(--border2); border-radius: var(--r-lg); padding: 16px; margin-bottom: 10px; background: #fff; }
+    /* ── WORKOUT STEPS ── */
+    .wk-card { border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 16px; background: var(--bg); margin-bottom: 10px; }
     .wk-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
-    .wk-title { font-size: 15px; font-weight: 600; margin-top: 5px; }
-    .wk-meta { font-size: 12px; color: var(--text2); margin-bottom: 12px; font-family: 'DM Mono', monospace; }
-    .wk-dur { font-size: 12px; color: var(--text2); font-family: 'DM Mono', monospace; }
-
-    /* ── STEPS ── */
+    .wk-title { font-size: 15px; font-weight: 700; margin-top: 5px; }
+    .wk-meta { font-size: 12px; color: var(--text2); margin-bottom: 12px; }
     .step-list { display: flex; flex-direction: column; }
     .step { display: flex; gap: 11px; padding: 9px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
     .step:last-child { border-bottom: none; }
-    .step-ico { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 500; flex-shrink: 0; border: 1.5px solid; font-family: 'DM Mono', monospace; }
-    .s-z1 { border-color: rgba(0,168,89,.4); color: var(--green2); background: var(--green-dim); }
-    .s-z2 { border-color: rgba(0,168,89,.6); color: var(--green2); background: var(--green-dim); }
-    .s-z3 { border-color: rgba(224,120,0,.5); color: var(--amber); background: var(--amber-dim); }
-    .s-z4 { border-color: rgba(212,80,43,.5); color: #c04820; background: rgba(212,80,43,.08); }
-    .s-z5 { border-color: rgba(212,43,43,.5); color: var(--red); background: var(--red-dim); }
+    .step-ico { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; border: 1.5px solid; }
+    .sz1,.sz2 { border-color: rgba(24,95,165,.4); color: var(--blue); background: var(--blue-pale); }
+    .sz3 { border-color: rgba(133,79,11,.4); color: var(--amber); background: var(--amber-dim); }
+    .sz4 { border-color: rgba(163,45,45,.4); color: var(--red); background: var(--red-dim); }
     .step-body { flex: 1; }
-    .step-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .step-name { font-size: 13px; font-weight: 600; }
     .step-detail { font-size: 11px; color: var(--text2); margin-top: 1px; }
-    .step-target { font-size: 11px; font-family: 'DM Mono', monospace; margin-top: 3px; font-weight: 500; }
-    .t-z1,.t-z2 { color: var(--green2); } .t-z3 { color: var(--amber); } .t-z4 { color: #c04820; } .t-z5 { color: var(--red); }
+    .step-target { font-size: 11px; font-weight: 600; margin-top: 3px; }
+    .tz1,.tz2 { color: var(--blue); } .tz3 { color: var(--amber); } .tz4 { color: var(--red); }
 
     /* ── PUSH ROWS ── */
     .push-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .push-row:last-child { border-bottom: none; }
-    .push-day { font-size: 13px; font-weight: 600; color: var(--text); }
-    .push-meta { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
-    .push-btn { font-size: 11px; font-family: 'DM Mono', monospace; padding: 6px 13px; border-radius: 8px; border: 1.5px solid var(--green2); color: var(--green2); background: transparent; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-weight: 500; }
-    .push-btn:active { background: var(--green-dim); }
-    .push-btn:disabled { opacity: 0.35; }
-    .push-all { width: 100%; margin-top: 14px; padding: 13px; font-size: 14px; font-weight: 700; background: var(--green); border: none; color: #fff; border-radius: var(--r); cursor: pointer; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; font-size: 16px; }
-    .push-all:active { background: var(--green2); }
+    .push-day { font-size: 13px; font-weight: 600; }
+    .push-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .push-btn { font-size: 11px; font-weight: 600; padding: 6px 13px; border-radius: 8px; border: 1px solid var(--blue-mid); color: var(--blue); background: var(--blue-pale); cursor: pointer; white-space: nowrap; }
+    .push-all { width: 100%; margin-top: 14px; padding: 13px; font-size: 15px; font-weight: 700; background: var(--blue); border: none; color: #fff; border-radius: var(--r); cursor: pointer; }
 
-    /* ── FORM ── */
+    /* ── FORMS ── */
     .form-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 13px; }
-    .form-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
-    .form-group select, .form-group input, .form-group textarea {
-      background: #fff; border: 1.5px solid var(--border2);
-      border-radius: var(--r); color: var(--text); font-size: 15px;
-      padding: 11px 13px; font-family: 'Barlow', sans-serif; outline: none;
-      -webkit-appearance: none; appearance: none; width: 100%;
-    }
+    .form-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+    .form-group select, .form-group input, .form-group textarea { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); color: var(--text); font-size: 15px; padding: 11px 13px; font-family: 'Figtree', sans-serif; outline: none; -webkit-appearance: none; width: 100%; }
     .form-group textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
-    .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--green2); }
-    .btn-primary { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; background: #111; color: #fff; border: none; border-radius: var(--r); cursor: pointer; transition: all 0.15s; }
-    .btn-primary:active { background: #333; transform: scale(0.98); }
-    .btn-primary:disabled { opacity: 0.4; }
-    .btn-primary.green { background: var(--green); }
-    .btn-primary.green:active { background: var(--green2); }
+    .form-group select:focus, .form-group input:focus, .form-group textarea:focus { border-color: var(--blue); }
+    .btn-primary { width: 100%; padding: 14px; font-size: 16px; font-weight: 700; font-family: 'Figtree', sans-serif; background: var(--blue); color: #fff; border: none; border-radius: var(--r); cursor: pointer; }
+    .btn-primary:active { background: var(--blue2); }
+    .btn-primary:disabled { opacity: 0.45; }
+    .btn-outline { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; background: var(--bg); border: 1.5px solid var(--blue); color: var(--blue); border-radius: var(--r); cursor: pointer; font-family: 'Figtree', sans-serif; }
+    .btn-outline:active { background: var(--blue-pale); }
 
     /* ── CHAT ── */
     #p-coach { padding: 0; display: flex; flex-direction: column; }
-    .coach-header { padding: 16px 16px 10px; flex-shrink: 0; border-bottom: 1px solid var(--border); }
-    #chat-msgs { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .coach-hdr { padding: 18px 18px 10px; flex-shrink: 0; border-bottom: 1px solid var(--border); }
+    #chat-msgs { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; }
     .msg { max-width: 82%; }
-    .msg.ai { align-self: flex-start; }
+    .msg.ai   { align-self: flex-start; }
     .msg.user { align-self: flex-end; }
     .msg-bubble { padding: 11px 14px; font-size: 14px; line-height: 1.55; border-radius: 16px; }
-    .msg.ai .msg-bubble { background: var(--bg2); color: var(--text); border-radius: 5px 16px 16px 16px; border: 1px solid var(--border); }
-    .msg.user .msg-bubble { background: #111; color: #fff; border-radius: 16px 5px 16px 16px; font-weight: 500; }
-    .chat-input-wrap { padding: 10px 14px; padding-bottom: calc(10px + var(--safe-bot)); border-top: 1.5px solid #111; background: #fff; display: flex; gap: 9px; flex-shrink: 0; }
-    .chat-input { flex: 1; background: var(--bg2); border: 1.5px solid var(--border2); border-radius: 22px; color: var(--text); font-size: 15px; padding: 11px 16px; font-family: 'Barlow', sans-serif; outline: none; }
-    .chat-input:focus { border-color: #111; }
-    .chat-send { width: 44px; height: 44px; border-radius: 50%; background: #111; border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: transform 0.1s; }
-    .chat-send:active { transform: scale(0.92); }
+    .msg.ai   .msg-bubble { background: var(--bg2); color: var(--text); border-radius: 5px 16px 16px 16px; border: 1px solid var(--border); }
+    .msg.user .msg-bubble { background: var(--blue); color: #fff; border-radius: 16px 5px 16px 16px; font-weight: 500; }
+    .chat-input-wrap { padding: 10px 14px; padding-bottom: calc(10px + var(--safe-bot)); border-top: 1px solid var(--border2); background: var(--bg); display: flex; gap: 9px; flex-shrink: 0; }
+    .chat-input { flex: 1; background: var(--bg2); border: 1px solid var(--border2); border-radius: 22px; color: var(--text); font-size: 15px; padding: 11px 16px; font-family: 'Figtree', sans-serif; outline: none; }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-send { width: 44px; height: 44px; border-radius: 50%; background: var(--blue); border: none; color: #fff; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .chat-send:active { background: var(--blue2); }
     .chat-send:disabled { opacity: 0.4; }
-    .typing { display: flex; gap: 4px; align-items: center; padding: 2px 0; }
+    .typing { display: flex; gap: 4px; align-items: center; }
     .typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--text3); animation: typing 1.2s ease-in-out infinite; }
     .typing span:nth-child(2) { animation-delay: 0.2s; }
     .typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing { 0%,100% { opacity:.3; transform:translateY(0); } 50% { opacity:1; transform:translateY(-3px); } }
-    .qp-scroll { display: flex; gap: 8px; overflow-x: auto; padding: 10px 0 4px; }
+    @keyframes typing { 0%,100%{opacity:.3;transform:translateY(0);}50%{opacity:1;transform:translateY(-3px);} }
+    .qp-scroll { display: flex; gap: 7px; overflow-x: auto; padding: 10px 0 4px; }
     .qp-scroll::-webkit-scrollbar { display: none; }
-    .qp-chip { flex-shrink: 0; font-size: 12px; padding: 7px 13px; border-radius: 20px; border: 1.5px solid var(--border2); background: #fff; color: var(--text2); cursor: pointer; white-space: nowrap; font-weight: 500; }
-    .qp-chip:active { background: var(--bg2); border-color: #111; color: #111; }
+    .qp-chip { flex-shrink: 0; font-size: 12px; font-weight: 500; padding: 7px 13px; border-radius: 20px; border: 1px solid var(--border2); background: var(--bg); color: var(--text2); cursor: pointer; white-space: nowrap; }
+    .qp-chip:active { border-color: var(--blue); color: var(--blue); background: var(--blue-pale); }
 
-    /* ── PROFILE EDIT ── */
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .pf-card { border: 1.5px solid var(--border2); border-radius: var(--r); padding: 13px; background: #fff; }
-    .pf-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-    .pf-val { font-family: 'Barlow Condensed', sans-serif; font-size: 24px; font-weight: 800; color: var(--text); }
-    .pf-input { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 700; background: var(--bg2); border: 1.5px solid var(--green2); border-radius: 6px; color: var(--text); padding: 4px 8px; width: 100%; outline: none; }
-    .edit-btn { font-size: 12px; font-family: 'DM Mono', monospace; padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border2); color: var(--text2); background: #fff; cursor: pointer; font-weight: 500; transition: all 0.15s; }
-    .edit-btn:active { border-color: #111; color: #111; }
-    .save-btn { font-size: 12px; font-family: 'DM Mono', monospace; padding: 6px 14px; border-radius: 8px; border: none; color: #fff; background: var(--green); cursor: pointer; font-weight: 500; }
-    .cancel-btn { font-size: 12px; font-family: 'DM Mono', monospace; padding: 6px 14px; border-radius: 8px; border: 1.5px solid var(--border2); color: var(--text2); background: #fff; cursor: pointer; font-weight: 500; }
-    .section-actions { display: flex; gap: 8px; align-items: center; }
-
-    /* ── ZONES ── */
+    /* ── PROFILE ── */
+    .pf-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 9px; }
+    .pf-card { background: var(--bg); border: 1px solid var(--border2); border-radius: var(--r); padding: 13px; }
+    .pf-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+    .pf-val { font-size: 20px; font-weight: 700; color: var(--text); }
+    .pf-input { font-size: 18px; font-weight: 700; background: var(--blue-pale); border: 1.5px solid var(--blue); border-radius: 6px; color: var(--text); padding: 4px 8px; width: 100%; outline: none; font-family: 'Figtree', sans-serif; }
+    .pf-textarea { font-size: 14px; font-weight: 400; background: var(--blue-pale); border: 1.5px solid var(--blue); border-radius: 6px; color: var(--text); padding: 8px; width: 100%; outline: none; font-family: 'Figtree', sans-serif; resize: vertical; min-height: 80px; line-height: 1.5; }
+    .sec-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .sec-row .sec-header { margin: 0; }
+    .edit-btn   { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); cursor: pointer; }
+    .save-btn   { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: none; color: #fff; background: var(--blue); cursor: pointer; }
+    .cancel-btn { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 8px; border: 1px solid var(--border2); color: var(--text2); background: var(--bg); cursor: pointer; }
+    .sec-actions { display: flex; gap: 7px; }
     .zone-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
     .zone-row:last-child { border-bottom: none; }
     .zone-name { font-size: 13px; font-weight: 600; }
-    .zone-range { font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 500; }
-    .race-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .zone-range { font-size: 12px; font-weight: 600; }
+
+    /* Past races */
+    .race-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
     .race-row:last-child { border-bottom: none; }
     .race-name { font-size: 14px; font-weight: 600; }
-    .race-date { font-size: 11px; color: var(--text2); margin-top: 2px; font-family: 'DM Mono', monospace; }
-    .race-pill { font-size: 10px; font-family: 'DM Mono', monospace; padding: 4px 10px; border-radius: 8px; background: var(--green-dim); color: var(--green2); border: 1px solid rgba(0,168,89,.3); white-space: nowrap; font-weight: 500; }
+    .race-detail { font-size: 11px; color: var(--text2); margin-top: 2px; }
+    .race-result { font-size: 12px; font-weight: 700; color: var(--blue); white-space: nowrap; }
 
-    /* ── PLAN OUTPUT ── */
-    .plan-week-hdr { display: flex; justify-content: space-between; font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 0; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
-    .plan-session { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-    .plan-session:last-child { border-bottom: none; }
-    .plan-day { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text3); text-transform: uppercase; width: 28px; padding-top: 3px; }
-    .plan-body { flex: 1; }
-    .plan-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
-    .plan-meta { font-size: 11px; color: var(--text2); font-family: 'DM Mono', monospace; }
+    /* Fitness app connections */
+    .fitness-app-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
+    .fitness-app-row:last-child { border-bottom: none; }
+    .app-info { display: flex; align-items: center; gap: 12px; }
+    .app-icon { width: 36px; height: 36px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .app-name { font-size: 14px; font-weight: 600; }
+    .app-sub { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .connect-btn { font-size: 11px; font-weight: 600; padding: 6px 13px; border-radius: 8px; border: 1px solid var(--blue-mid); color: var(--blue); background: var(--blue-pale); cursor: pointer; white-space: nowrap; }
+    .connected-tag { font-size: 11px; font-weight: 600; padding: 5px 11px; border-radius: 8px; background: var(--green-dim); color: var(--green); border: 1px solid var(--green-mid); }
 
-    /* ── INFO / WARN BOXES ── */
-    .info-box { background: var(--blue-dim); border: 1px solid rgba(26,111,181,.25); border-radius: var(--r); padding: 11px 14px; font-size: 12px; color: var(--blue); line-height: 1.55; margin-bottom: 14px; font-family: 'DM Mono', monospace; }
-    .warn-box { background: var(--amber-dim); border: 1px solid rgba(224,120,0,.25); border-radius: var(--r); padding: 11px 14px; font-size: 12px; color: var(--amber); line-height: 1.55; margin-bottom: 14px; font-family: 'DM Mono', monospace; }
+    /* ── PLAN TAB ── */
+    .plan-tabs { display: flex; border-bottom: 1px solid var(--border2); margin-bottom: 14px; }
+    .plan-tab { flex: 1; padding: 9px 0; text-align: center; font-size: 13px; font-weight: 600; color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent; }
+    .plan-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .chart-card { border: 1px solid var(--border2); border-radius: var(--r-lg); padding: 15px 15px 10px; margin-bottom: 12px; }
+    .chart-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 10px; }
+    .chart-title { font-size: 14px; font-weight: 700; color: var(--text); }
+    .chart-range { font-size: 11px; color: var(--text3); }
+    .chart-values { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .chart-start { font-size: 12px; color: var(--text3); }
+    .chart-now { font-size: 24px; font-weight: 700; color: var(--blue); }
+    .chart-delta { font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 20px; background: var(--green-dim); color: var(--green); }
+    .chart-proj { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+    .metric-table { width: 100%; border-collapse: collapse; }
+    .metric-row { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.12s; }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-row:hover { background: var(--bg2); }
+    .metric-row.selected { background: var(--blue-pale); }
+    .metric-row td { padding: 10px 10px; font-size: 13px; vertical-align: middle; }
+    .metric-row.selected td { color: var(--blue2); font-weight: 500; }
+    .m-label { display: flex; align-items: center; gap: 7px; color: var(--text2); }
+    .m-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .m-val { text-align: center; font-weight: 600; color: var(--text); white-space: nowrap; }
+    .m-badge { text-align: right; }
+    .trend-up { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; background: var(--green-dim); color: var(--green); }
+    .week-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .week-row:last-child { border-bottom: none; }
+    .wk-num { font-size: 11px; font-weight: 600; color: var(--text3); width: 36px; flex-shrink: 0; }
+    .wk-body { flex: 1; }
+    .wk-phase { font-size: 13px; font-weight: 600; }
+    .wk-meta { font-size: 11px; color: var(--text2); margin-top: 1px; }
+    .wk-done   { width: 20px; height: 20px; border-radius: 50%; background: var(--green-dim); border: 1px solid var(--green-mid); display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+    .wk-active { width: 20px; height: 20px; border-radius: 50%; background: var(--blue-pale); border: 2px solid var(--blue); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--blue); flex-shrink: 0; }
+    .wk-future { width: 20px; height: 20px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--border2); flex-shrink: 0; }
 
-    /* ── SPINNER ── */
-    .spinner { width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--green2); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+    /* ── MISC ── */
+    .info-box { background: var(--blue-pale); border: 1px solid var(--blue-mid); border-radius: var(--r); padding: 11px 14px; font-size: 12px; font-weight: 500; color: var(--blue2); line-height: 1.55; margin-bottom: 14px; }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--border2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; vertical-align: middle; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-row { display: flex; align-items: center; gap: 10px; color: var(--text2); font-size: 13px; padding: 16px 0; font-family: 'DM Mono', monospace; }
+
+    /* ── DESKTOP overrides for coach ── */
+    @media (min-width: 768px) {
+      #p-coach { height: 100%; }
+      .coach-hdr { padding: 20px 28px 12px; }
+      #chat-msgs { padding: 14px 28px; max-width: 720px; }
+      .chat-input-wrap { padding: 12px 28px; }
+    }
   </style>
 </head>
 <body>
 <div id="app">
   <div class="status-bar"></div>
 
-  <div class="top-bar">
-    <div class="top-logo"><div class="logo-dot"></div>Endure AI</div>
-    <div class="garmin-pill" id="garmin-pill" onclick="showGarminInfo()">Connect Garmin</div>
+  <div class="top-bar" id="top-bar">
+    <div class="logo">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+        <rect width="40" height="40" rx="10" fill="rgba(255,255,255,0.15)"/>
+        <path d="M5 31 Q11 30 16 27 Q21 24 26 20 Q30 17 35 14" stroke="white" stroke-opacity="0.25" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <path d="M5 27 Q10 25 15 22 Q20 18 24 15 Q28 12 35 10" stroke="white" stroke-opacity="0.55" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+        <path d="M5 23 Q10 20 14 17 Q19 13 23 10 Q27 8 35 6" stroke="white" stroke-opacity="1" stroke-width="2.1" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-name">Endure AI</span>
+    </div>
+    <div class="page-title-bar" id="page-title-bar" style="display:none">Today</div>
+    <div class="garmin-pill" id="garmin-pill">Garmin synced</div>
   </div>
 
-  <div id="pages">
+  <!-- DESKTOP SIDEBAR injected by JS -->
 
-    <!-- ══════════════════════════════════════════════════════
-         TODAY TAB
-    ══════════════════════════════════════════════════════ -->
-    <div class="page active" id="p-dashboard">
-      <div class="page-title">Today</div>
-      <div class="page-sub" id="dash-sub">Thursday · Week 9 · 7 weeks to Houston Tri</div>
+  <div class="main-area" id="main-area" style="display:contents">
+    <div id="pages">
 
-      <div class="section-label">This week</div>
-      <div class="week-strip">
-        <div class="day-pill rest"><div class="day-lbl">Mon</div><div class="day-ico">—</div></div>
-        <div class="day-pill"><div class="day-lbl">Tue</div><div class="day-ico">🏊</div><div class="day-pip-row"><div class="pip" style="background:#1a6fb5"></div><div class="pip" style="background:#1a6fb5"></div></div></div>
-        <div class="day-pill"><div class="day-lbl">Wed</div><div class="day-ico">🚴</div><div class="day-pip-row"><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div></div></div>
-        <div class="day-pill today"><div class="day-lbl">Thu</div><div class="day-ico">🏋️</div><div class="day-pip-row"><div class="pip" style="background:#6b44c4"></div><div class="pip" style="background:#6b44c4"></div></div></div>
-        <div class="day-pill"><div class="day-lbl">Fri</div><div class="day-ico">🏃</div><div class="day-pip-row"><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div></div></div>
-        <div class="day-pill"><div class="day-lbl">Sat</div><div class="day-ico">🚴</div><div class="day-pip-row"><div class="pip" style="background:#d42b2b"></div><div class="pip" style="background:#d42b2b"></div><div class="pip" style="background:#d42b2b"></div><div class="pip" style="background:#d42b2b"></div></div></div>
-        <div class="day-pill"><div class="day-lbl">Sun</div><div class="day-ico">🏃</div><div class="day-pip-row"><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div><div class="pip" style="background:#e07800"></div></div></div>
-      </div>
+      <!-- ══ TODAY ══ -->
+      <div class="page active" id="p-dashboard">
+        <div class="sec-header">Today</div>
+        <p style="font-size:13px;color:var(--text2);margin-bottom:20px">Thursday · Week 9 of 24 · 7 weeks to Houston Tri</p>
 
-      <div class="section-label">Fitness load</div>
-      <div class="metrics-row" id="metrics-row">
-        <!-- rendered by JS so colors can be dynamic -->
-      </div>
-
-      <div class="section-label">Weekly volume</div>
-      <div class="volume-row" id="volume-row">
-        <!-- rendered by JS -->
-      </div>
-
-      <div class="section-label">Coach insight</div>
-      <div class="ai-box">
-        <div class="ai-box-accent"></div>
-        <div class="ai-header"><div class="ai-pulse"></div><div class="ai-lbl">Coach insight</div></div>
-        <div class="ai-text" id="ai-insight-text">TSB of −7 is in your productive training window. Swim volume is on track for Houston Tri. Friday's interval run is pre-built with Garmin alerts — 4×8 min at Z4 with auto-advance. For today's strength session, skip barbell squats and sub in split squats given your knee history.</div>
-        <div class="chips">
-          <div class="chip" onclick="sendPrompt('Should I adjust Saturday\'s long ride? My legs feel heavy.')">Adjust Saturday</div>
-          <div class="chip" onclick="sendPrompt('Give me a knee-safe strength swap for today\'s session')">Knee-safe lift</div>
-          <div class="chip" onclick="sendPrompt('How is my training trending toward Houston Tri?')">Race readiness</div>
+        <div class="sec-header" style="font-size:15px">This week</div>
+        <div class="week-strip">
+          <div class="day-card rest"><div class="d-lbl">Mon</div><div class="d-ico" style="font-size:14px">—</div><div class="d-type">Rest</div></div>
+          <div class="day-card"><div class="d-lbl">Tue</div><div class="d-ico">🏊</div><div class="d-type">Threshold</div><div class="d-detail">3,200 yds</div><div class="d-pips"><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div></div></div>
+          <div class="day-card"><div class="d-lbl">Wed</div><div class="d-ico">🚴</div><div class="d-type">Sweet spot</div><div class="d-detail">75 min</div><div class="d-pips"><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div></div></div>
+          <div class="day-card today"><div class="d-lbl">Thu</div><div class="d-ico">🏋️</div><div class="d-type">Strength A</div><div class="d-detail">55 min</div><div class="d-pips"><div class="pip" style="background:#534AB7"></div><div class="pip" style="background:#534AB7"></div></div></div>
+          <div class="day-card"><div class="d-lbl">Fri</div><div class="d-ico">🏃</div><div class="d-type">Intervals</div><div class="d-detail">4×8 min</div><div class="d-pips"><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div><div class="pip" style="background:#185FA5"></div></div></div>
+          <div class="day-card"><div class="d-lbl">Sat</div><div class="d-ico">🚴</div><div class="d-type">Long ride</div><div class="d-detail">3h 30m</div><div class="d-pips"><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div><div class="pip" style="background:#A32D2D"></div></div></div>
+          <div class="day-card"><div class="d-lbl">Sun</div><div class="d-ico">🏃</div><div class="d-type">Long run</div><div class="d-detail">90 min</div><div class="d-pips"><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div><div class="pip" style="background:#378ADD"></div></div></div>
         </div>
-      </div>
-    </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PLAN TAB
-    ══════════════════════════════════════════════════════ -->
-    <div class="page" id="p-plan">
-      <div class="page-title">Plan generator</div>
-      <div class="page-sub">AI-built workouts pushed to your Garmin</div>
-
-      <div class="info-box">Structured workouts include step-by-step targets. Your watch guides each interval with real-time pace and HR alerts.</div>
-
-      <div class="section-label">Goal race</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);">
-        <div class="form-group" style="margin-bottom:13px">
-          <div class="form-label">Race type</div>
-          <select id="fg-race">
-            <option value="">Select race type...</option>
-            <option value="sprint_triathlon">Sprint Triathlon</option>
-            <option value="olympic_triathlon">Olympic Triathlon</option>
-            <option value="70.3_triathlon">70.3 Triathlon (Half Iron)</option>
-            <option value="140.6_triathlon">140.6 Triathlon (Full Iron)</option>
-            <option value="half_marathon">Half Marathon</option>
-            <option value="marathon">Marathon</option>
-            <option value="bike_race">Bike Race</option>
-            <option value="bike_ftp_build">Bike FTP Build (no race)</option>
-          </select>
-        </div>
-        <div class="form-group" style="margin-bottom:13px">
-          <div class="form-label">Event date</div>
-          <input type="date" id="fg-date" />
-        </div>
-        <div class="form-group" style="margin-bottom:13px">
-          <div class="form-label">Plan length</div>
-          <select id="fg-weeks">
-            <option value="8">8 weeks</option>
-            <option value="12">12 weeks</option>
-            <option value="16" selected>16 weeks</option>
-            <option value="20">20 weeks</option>
-            <option value="24">24 weeks</option>
-          </select>
-        </div>
-        <div class="form-group" style="margin-bottom:13px">
-          <div class="form-label">Training days per week</div>
-          <input type="number" id="fg-days" value="5" min="3" max="7" />
-        </div>
-        <div class="form-group" style="margin-bottom:16px">
-          <div class="form-label">Preferences & notes</div>
-          <textarea id="fg-prefs" placeholder="e.g. I prefer long rides on Saturdays, run intervals on Tuesdays and Fridays, two strength sessions per week, avoid back-to-back hard days..."></textarea>
-        </div>
-        <button class="btn-primary green" id="gen-btn" onclick="generatePlan()">Generate training plan</button>
-      </div>
-
-      <div class="section-label">Sample — Friday interval run</div>
-      <div class="wk-card">
-        <div class="wk-top">
-          <div><span class="badge b-run">Run</span><div class="wk-title">4×8 min threshold</div></div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="badge b-garmin">Garmin ready</span><span class="wk-dur">70 min</span></div>
-        </div>
-        <div class="wk-meta">Auto-alerts · pace targets fire on watch · loops 4×</div>
-        <div class="step-list">
-          <div class="step"><div class="step-ico s-z2">W</div><div class="step-body"><div class="step-name">Warm-up</div><div class="step-detail">15 min easy jog</div><div class="step-target t-z2">Z2 · &lt;9:15/mi · HR &lt;140</div></div></div>
-          <div class="step"><div class="step-ico s-z3">D</div><div class="step-body"><div class="step-name">Drills + strides</div><div class="step-detail">4 min activation</div><div class="step-target t-z3">⚡ Alert: intervals in 60s</div></div></div>
-          <div class="step"><div class="step-ico s-z4">1–4</div><div class="step-body"><div class="step-name">4× Intervals</div><div class="step-detail">8 min hard / 2 min recovery × 4</div><div class="step-target t-z4">Z4 · 7:10–8:00/mi · HR 165–172</div></div></div>
-          <div class="step"><div class="step-ico s-z1">C</div><div class="step-body"><div class="step-name">Cool-down</div><div class="step-detail">10 min easy</div><div class="step-target t-z1">Z1 · HR dropping</div></div></div>
-        </div>
-      </div>
-
-      <div id="plan-output" style="display:none">
-        <div class="section-label">Generated plan — week 1</div>
-        <div class="card" style="background:#fff;border:1.5px solid var(--border2);" id="plan-weeks"></div>
-        <div class="section-label">Push this week to Garmin</div>
-        <div class="card" style="background:#fff;border:1.5px solid var(--border2);">
-          <div class="push-row"><div><div class="push-day">Friday</div><div class="push-meta">Run · 4×8 min threshold · 70 min</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Saturday</div><div class="push-meta">Bike · Long aerobic ride · 3h · 220–240W</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Sunday</div><div class="push-meta">Run · Easy long run · 90 min · Z2</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <div class="push-row"><div><div class="push-day">Tuesday</div><div class="push-meta">Swim · Endurance set · 2,800 yds</div></div><button class="push-btn" onclick="pushWorkout(this)">Push →</button></div>
-          <button class="push-all" onclick="pushAll()">Push full week to Garmin</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-         COACH TAB
-    ══════════════════════════════════════════════════════ -->
-    <div class="page" id="p-coach">
-      <div class="coach-header">
-        <div class="page-title" style="margin-bottom:2px">Coach</div>
-        <div class="page-sub" style="margin-bottom:0">Knows your metrics, races & health history</div>
-        <div class="qp-scroll">
-          <div class="qp-chip" onclick="sendPrompt('Build me a 16-week 70.3 plan starting next Monday')">16-week 70.3 plan</div>
-          <div class="qp-chip" onclick="sendPrompt('My knee is sore — what should I modify this week?')">Knee flare-up</div>
-          <div class="qp-chip" onclick="sendPrompt('Build a structured bike interval workout for Wednesday, formatted for Garmin')">Bike intervals</div>
-          <div class="qp-chip" onclick="sendPrompt('My legs feel heavy — should I rest Saturday or do the long ride?')">Rest or ride?</div>
-          <div class="qp-chip" onclick="sendPrompt('How is my swim volume trending for 70.3 prep?')">Swim check</div>
-          <div class="qp-chip" onclick="sendPrompt('What should I eat before my long ride Saturday?')">Pre-ride nutrition</div>
-        </div>
-      </div>
-      <div id="chat-msgs">
-        <div class="msg ai"><div class="msg-bubble">Hey! I know your FTP (268W), threshold pace (7:45/mi), goal races, and your right knee history. CTL is 74, TSB is −7 — solid building phase. What do you need?</div></div>
-      </div>
-      <div class="chat-input-wrap">
-        <input class="chat-input" id="chat-in" placeholder="Ask your coach..." />
-        <button class="chat-send" id="chat-send-btn" onclick="sendChat()">↑</button>
-      </div>
-    </div>
-
-    <!-- ══════════════════════════════════════════════════════
-         PROFILE TAB
-    ══════════════════════════════════════════════════════ -->
-    <div class="page" id="p-profile">
-      <div class="page-title">Profile</div>
-      <div class="page-sub">Your metrics power every AI recommendation</div>
-
-      <!-- ATHLETE SECTION -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-        <div class="section-label" style="margin:0;border:none">Athlete</div>
-        <div class="section-actions" id="athlete-actions">
-          <button class="edit-btn" onclick="editSection('athlete')">Edit</button>
-        </div>
-      </div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);margin-bottom:4px">
-        <div class="profile-grid" id="athlete-grid">
-          <!-- rendered by JS -->
-        </div>
-      </div>
-
-      <!-- PERFORMANCE SECTION -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;margin-top:20px">
-        <div class="section-label" style="margin:0;border:none">Performance</div>
-        <div class="section-actions" id="perf-actions">
-          <button class="edit-btn" onclick="editSection('perf')">Edit</button>
-        </div>
-      </div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);margin-bottom:4px">
-        <div class="profile-grid" id="perf-grid">
-          <!-- rendered by JS -->
-        </div>
-      </div>
-
-      <!-- RUNNING ZONES -->
-      <div class="section-label">Running zones</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);margin-bottom:4px" id="run-zones">
-        <!-- rendered by JS -->
-      </div>
-
-      <!-- CYCLING ZONES -->
-      <div class="section-label">Cycling zones</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);margin-bottom:4px" id="bike-zones">
-        <!-- rendered by JS -->
-      </div>
-
-      <!-- GOAL RACES -->
-      <div class="section-label">Goal races</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);margin-bottom:4px">
-        <div class="race-row"><div><div class="race-name">Houston Tri — Olympic</div><div class="race-date">Jun 14, 2026</div></div><div class="race-pill">7 wks out</div></div>
-        <div class="race-row"><div><div class="race-name">Ironman 70.3 Texas</div><div class="race-date">Oct 11, 2026</div></div><div class="race-pill">24 wks out</div></div>
-      </div>
-
-      <!-- GARMIN -->
-      <div class="section-label">Garmin connect</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);">
-        <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="desktop-cols">
           <div>
-            <div style="font-weight:600;margin-bottom:3px" id="garmin-status-text">Not connected</div>
-            <div style="font-size:12px;color:var(--text2);font-family:'DM Mono',monospace" id="garmin-status-sub">Pending Garmin Developer approval</div>
+            <div class="sec-header" style="font-size:15px">Fitness load</div>
+            <div class="stat-grid" id="stat-grid"></div>
           </div>
-          <button class="push-btn" onclick="showGarminInfo()">How to connect</button>
+          <div>
+            <div class="sec-header" style="font-size:15px">Weekly volume</div>
+            <div class="vol-grid" id="vol-grid"></div>
+          </div>
+        </div>
+
+        <div class="sec-header" style="font-size:15px">Coach insight</div>
+        <div class="insight-card">
+          <div class="ins-hdr"><div class="ins-dot"></div><div class="ins-lbl">Coach AI</div></div>
+          <div class="ins-text">ATL is elevated at 81 — protect Saturday's long ride intensity. TSB of −7 keeps you in the productive training window. Friday's interval run is Garmin-ready with auto-alerts. For today's strength, sub split squats for barbell squats given your knee history.</div>
+          <div class="chips">
+            <div class="chip" onclick="sendPrompt('Should I adjust Saturday\'s long ride? My legs feel heavy.')">Adjust Saturday</div>
+            <div class="chip" onclick="sendPrompt('Give me a knee-safe strength swap for today')">Knee-safe lift</div>
+            <div class="chip" onclick="sendPrompt('How is my training trending toward Houston Tri?')">Race readiness</div>
+          </div>
+        </div>
+
+        <div class="sec-header" style="font-size:15px">Upcoming sessions</div>
+        <div class="sessions-card">
+          <div class="sess-hdr"><div class="sess-hdr-title">This week</div><div class="sess-hdr-sub">Auto-synced to Garmin</div></div>
+          <div class="sess-row"><div class="sess-day">Fri</div><div class="sess-body"><div class="sess-name"><span class="badge b-run">Run</span>Threshold intervals</div><div class="sess-meta">70 min · 4×8 min Z4 · 7:10–8:00/mi</div></div><div class="detail-btn" onclick="sendPrompt('Show me the full step-by-step details for Friday\'s threshold run interval workout')">Details →</div></div>
+          <div class="sess-row"><div class="sess-day">Sat</div><div class="sess-body"><div class="sess-name"><span class="badge b-bike">Bike</span>Long aerobic ride</div><div class="sess-meta">3h 30m · 220–240W · nutrition practice</div></div><div class="detail-btn" onclick="sendPrompt('Show me the full details for Saturday\'s long aerobic ride')">Details →</div></div>
+          <div class="sess-row"><div class="sess-day">Sun</div><div class="sess-body"><div class="sess-name"><span class="badge b-run">Run</span>Easy long run</div><div class="sess-meta">90 min · Z2 · conversational pace</div></div><div class="detail-btn" onclick="sendPrompt('Show me the full details for Sunday\'s long run')">Details →</div></div>
+          <div class="sess-row"><div class="sess-day">Tue</div><div class="sess-body"><div class="sess-name"><span class="badge b-swim">Swim</span>Threshold sets</div><div class="sess-meta">3,200 yds · 4×200 @ CSS</div></div><div class="detail-btn" onclick="sendPrompt('Show me the full details for Tuesday\'s swim threshold set')">Details →</div></div>
         </div>
       </div>
 
-      <!-- HEALTH NOTES -->
-      <div class="section-label">Health notes</div>
-      <div class="card" style="background:#fff;border:1.5px solid var(--border2);">
-        <div style="font-size:13px;color:var(--text2);font-family:'DM Mono',monospace;line-height:1.6">Right knee · meniscus history · AI avoids heavy knee loading and flags high-impact substitutions</div>
+      <!-- ══ PLAN ══ -->
+      <div class="page" id="p-plan">
+        <div class="sec-header">Training plan</div>
+
+        <div class="plan-hero">
+          <div class="plan-hero-title">Ironman 70.3 Texas — 16 weeks</div>
+          <div class="plan-hero-sub">Oct 11, 2026 · Build phase · Week 9 of 16</div>
+          <div class="prog-row">
+            <div class="prog-track"><div class="prog-fill" style="width:56%"></div></div>
+            <div class="prog-pct">56% complete</div>
+          </div>
+          <div class="prog-sub">9 weeks done · 7 weeks remaining</div>
+        </div>
+
+        <div class="plan-tabs">
+          <div class="plan-tab active" onclick="switchPlanTab('progress',this)">Progress</div>
+          <div class="plan-tab" onclick="switchPlanTab('weeks',this)">Schedule</div>
+        </div>
+
+        <div id="plan-progress">
+          <div class="desktop-cols">
+            <div>
+              <div class="sec-header" style="font-size:15px">Performance trend</div>
+              <div class="chart-card">
+                <div class="chart-header">
+                  <div class="chart-title" id="chart-title">FTP (cycling)</div>
+                  <div class="chart-range">Wk 1 → Wk 16</div>
+                </div>
+                <div class="chart-values">
+                  <div class="chart-start" id="chart-start">Start: 256W</div>
+                  <div class="chart-now" id="chart-now">268W</div>
+                  <div class="chart-delta" id="chart-delta">+12W ↑</div>
+                </div>
+                <div class="chart-proj" id="chart-proj">Projected at race day: ~282W</div>
+                <svg id="chart-svg" width="100%" viewBox="0 0 380 70" preserveAspectRatio="none" style="display:block;margin-top:8px">
+                  <line x1="0" y1="0"  x2="380" y2="0"  stroke="#eee" stroke-width="0.5"/>
+                  <line x1="0" y1="35" x2="380" y2="35" stroke="#eee" stroke-width="0.5"/>
+                  <line x1="0" y1="70" x2="380" y2="70" stroke="#eee" stroke-width="0.5"/>
+                  <polygon id="chart-area" points="0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28 297,70 0,70" fill="#185FA5" opacity="0.07"/>
+                  <polyline id="chart-line" points="0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28" fill="none" stroke="#185FA5" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  <polyline id="chart-proj-line" points="297,28 340,22 380,16" fill="none" stroke="#185FA5" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3" opacity="0.35"/>
+                  <line x1="297" y1="0" x2="297" y2="70" stroke="#185FA5" stroke-width="1" stroke-dasharray="3 2" opacity="0.25"/>
+                  <circle id="chart-dot" cx="297" cy="28" r="5" fill="#185FA5"/>
+                </svg>
+                <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:5px"><span>Wk 1</span><span>Wk 4</span><span>Wk 7</span><span>Wk 9</span><span>Wk 12</span><span>Wk 16</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="sec-header" style="font-size:15px">Metrics — tap to explore</div>
+              <div class="card" style="padding:4px 6px">
+                <table class="metric-table" style="width:100%"><tbody id="metric-rows"></tbody></table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="plan-weeks" style="display:none">
+          <div class="sec-header" style="font-size:15px">Full schedule</div>
+          <div class="card" style="padding:4px 14px" id="weeks-list"></div>
+        </div>
+
+        <div style="margin-top:8px">
+          <button class="btn-outline" onclick="sendPrompt('I want to create a new training plan. What options do I have?')">+ Create new plan</button>
+        </div>
       </div>
-    </div>
 
-  </div><!-- /pages -->
+      <!-- ══ COACH ══ -->
+      <div class="page" id="p-coach">
+        <div class="coach-hdr">
+          <div class="sec-header" style="margin-bottom:2px">Coach</div>
+          <p style="font-size:13px;color:var(--text2);margin-bottom:0">Knows your metrics, races &amp; health history</p>
+          <div class="qp-scroll">
+            <div class="qp-chip" onclick="sendPrompt('Build me a 16-week 70.3 plan starting next Monday')">16-week 70.3 plan</div>
+            <div class="qp-chip" onclick="sendPrompt('My knee is sore — what should I modify this week?')">Knee flare-up</div>
+            <div class="qp-chip" onclick="sendPrompt('Build a structured bike interval workout for Wednesday, formatted for Garmin')">Bike intervals</div>
+            <div class="qp-chip" onclick="sendPrompt('My legs feel heavy — should I rest Saturday or do the long ride?')">Rest or ride?</div>
+            <div class="qp-chip" onclick="sendPrompt('How is my swim volume trending for 70.3 prep?')">Swim check</div>
+            <div class="qp-chip" onclick="sendPrompt('What should I eat before my long ride Saturday?')">Pre-ride nutrition</div>
+          </div>
+        </div>
+        <div id="chat-msgs">
+          <div class="msg ai"><div class="msg-bubble">Hey! I know your FTP (268W), threshold pace (7:45/mi), goal races, and your right knee history. CTL is 74, TSB is −7 — solid building phase. What do you need?</div></div>
+        </div>
+        <div class="chat-input-wrap">
+          <input class="chat-input" id="chat-in" placeholder="Ask your coach..."/>
+          <button class="chat-send" id="send-btn" onclick="sendChat()">↑</button>
+        </div>
+      </div>
 
-  <!-- ── TAB BAR ── -->
-  <div class="tab-bar">
-    <button class="tab-btn active" onclick="showPage('dashboard',this)">
+      <!-- ══ PROFILE ══ -->
+      <div class="page" id="p-profile">
+        <div class="sec-header">Profile</div>
+
+        <!-- ATHLETE -->
+        <div class="sec-row">
+          <div class="sec-header" style="font-size:15px;margin:0">Athlete</div>
+          <div class="sec-actions" id="athlete-actions"><button class="edit-btn" onclick="editSection('athlete')">Edit</button></div>
+        </div>
+        <div class="card" id="athlete-grid"></div>
+
+        <!-- PERFORMANCE -->
+        <div class="sec-row" style="margin-top:20px">
+          <div class="sec-header" style="font-size:15px;margin:0">Performance</div>
+          <div class="sec-actions" id="perf-actions"><button class="edit-btn" onclick="editSection('perf')">Edit</button></div>
+        </div>
+        <div class="card" id="perf-grid"></div>
+
+        <div class="desktop-cols">
+          <div>
+            <div class="sec-header" style="font-size:15px">Running zones</div>
+            <div class="card" id="run-zones"></div>
+          </div>
+          <div>
+            <div class="sec-header" style="font-size:15px">Cycling zones</div>
+            <div class="card" id="bike-zones"></div>
+          </div>
+        </div>
+
+        <!-- PAST RACES -->
+        <div class="sec-header" style="font-size:15px">Past races</div>
+        <div class="card">
+          <div class="race-row">
+            <div><div class="race-name">Ironman 70.3 Galveston</div><div class="race-detail">Apr 6, 2025 · Half Iron</div></div>
+            <div class="race-result">5:12:34</div>
+          </div>
+          <div class="race-row">
+            <div><div class="race-name">Houston Marathon</div><div class="race-detail">Jan 19, 2025 · Marathon</div></div>
+            <div class="race-result">3:48:10</div>
+          </div>
+          <div class="race-row">
+            <div><div class="race-name">Ironman 70.3 Texas</div><div class="race-detail">Oct 12, 2024 · Half Iron</div></div>
+            <div class="race-result">5:28:51</div>
+          </div>
+          <div class="race-row">
+            <div><div class="race-name">Tour de Houston</div><div class="race-detail">Mar 2024 · Bike Race</div></div>
+            <div class="race-result">2:44:09</div>
+          </div>
+        </div>
+
+        <!-- FITNESS APP CONNECTIONS -->
+        <div class="sec-header" style="font-size:15px">Fitness app connections</div>
+        <div class="card" style="padding:4px 16px">
+          <div class="fitness-app-row">
+            <div class="app-info">
+              <div class="app-icon" style="background:#EAF3DE">⌚</div>
+              <div><div class="app-name">Garmin Connect</div><div class="app-sub">Activities, workouts, HRV, body battery</div></div>
+            </div>
+            <div class="connected-tag">Connected</div>
+          </div>
+          <div class="fitness-app-row">
+            <div class="app-info">
+              <div class="app-icon" style="background:#FCEBEB">🍎</div>
+              <div><div class="app-name">Apple Health</div><div class="app-sub">Steps, heart rate, sleep, workouts</div></div>
+            </div>
+            <button class="connect-btn">Connect</button>
+          </div>
+          <div class="fitness-app-row">
+            <div class="app-info">
+              <div class="app-icon" style="background:#E6F1FB">🏃</div>
+              <div><div class="app-name">Strava</div><div class="app-sub">Activity sync and segment data</div></div>
+            </div>
+            <button class="connect-btn">Connect</button>
+          </div>
+          <div class="fitness-app-row">
+            <div class="app-info">
+              <div class="app-icon" style="background:#EEEDFE">📱</div>
+              <div><div class="app-name">Samsung Health</div><div class="app-sub">Galaxy Watch activity and health data</div></div>
+            </div>
+            <button class="connect-btn">Connect</button>
+          </div>
+          <div class="fitness-app-row">
+            <div class="app-info">
+              <div class="app-icon" style="background:#FAEEDA">🔴</div>
+              <div><div class="app-name">Wahoo</div><div class="app-sub">ELEMNT, TICKR, and KICKR data</div></div>
+            </div>
+            <button class="connect-btn">Connect</button>
+          </div>
+        </div>
+
+        <!-- HEALTH NOTES -->
+        <div class="sec-row" style="margin-top:20px">
+          <div class="sec-header" style="font-size:15px;margin:0">Health notes</div>
+          <div class="sec-actions" id="health-actions"><button class="edit-btn" onclick="editSection('health')">Edit</button></div>
+        </div>
+        <div class="card" id="health-card">
+          <div style="font-size:14px;color:var(--text2);line-height:1.6" id="health-display">Right knee · meniscus history · AI avoids heavy knee loading and flags high-impact substitutions</div>
+        </div>
+
+      </div>
+    </div><!-- /pages -->
+  </div><!-- /main-area -->
+
+  <!-- MOBILE TAB BAR -->
+  <div class="tab-bar" id="tab-bar">
+    <div id="sidebar-logo-slot"></div>
+    <button class="tab-btn active" onclick="showPage('dashboard',this)" data-page="dashboard">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-      <span class="tab-label">Today</span>
+      <span class="tab-lbl">Today</span>
     </button>
-    <button class="tab-btn" onclick="showPage('plan',this)">
+    <button class="tab-btn" onclick="showPage('plan',this)" data-page="plan">
       <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
-      <span class="tab-label">Plan</span>
+      <span class="tab-lbl">Plan</span>
     </button>
-    <button class="tab-btn" onclick="showPage('coach',this)" id="tab-coach">
+    <button class="tab-btn" onclick="showPage('coach',this)" id="tab-coach" data-page="coach">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-      <span class="tab-label">Coach</span>
+      <span class="tab-lbl">Coach</span>
     </button>
-    <button class="tab-btn" onclick="showPage('profile',this)">
+    <button class="tab-btn" onclick="showPage('profile',this)" data-page="profile">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="tab-label">Profile</span>
+      <span class="tab-lbl">Profile</span>
     </button>
   </div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════════
+// ── STATE ────────────────────────────────────────────────────────────────────
 let athlete = {
-  // Athlete info
-  sex: 'Male', gender: 'Male', height: '5\'11"', weight: '175 lbs',
-  // Performance
-  ftp: 268, vo2max: 54, thresholdPace: '7:45', css: '1:42',
-  // Health
-  healthNotes: 'Right knee, meniscus history',
-  races: [
-    { name: 'Houston Tri — Olympic', date: 'Jun 14, 2026', weeksOut: 7 },
-    { name: 'Ironman 70.3 Texas', date: 'Oct 11, 2026', weeksOut: 24 },
-  ],
+  sex:'Male', gender:'Male', height:'5\'11"', weight:'175 lbs',
+  ftp:268, vo2max:54, thresholdPace:'7:45', css:'1:42',
+  healthNotes:'Right knee · meniscus history · AI avoids heavy knee loading and flags high-impact substitutions',
+};
+try { const s=localStorage.getItem('endure_athlete'); if(s) athlete={...athlete,...JSON.parse(s)}; } catch(e){}
+function saveAthlete(){ try{localStorage.setItem('endure_athlete',JSON.stringify(athlete));}catch(e){} }
+
+const metrics_data = {
+  ctl:74, atl:81, tsb:-7, weeklyTss:487, tssTarget:520,
+  swim:{val:6200, unit:'yards',    delta:'+800', pct:78, color:'#185FA5'},
+  bike:{val:87,   unit:'miles',    delta:'+12',  pct:68, color:'#378ADD'},
+  run: {val:22,   unit:'miles',    delta:'±0',   pct:55, color:'#85B7EB'},
+  lift:{val:2,    unit:'sessions', delta:'−1',   pct:67, color:'#534AB7'},
 };
 
-// Load saved athlete from localStorage if available
-try {
-  const saved = localStorage.getItem('endure_athlete');
-  if (saved) athlete = { ...athlete, ...JSON.parse(saved) };
-} catch(e) {}
+// ── DESKTOP LAYOUT ────────────────────────────────────────────────────────────
+function setupDesktop() {
+  const isDesktop = window.innerWidth >= 768;
+  const topBar = document.getElementById('top-bar');
+  const tabBar = document.getElementById('tab-bar');
+  const mainArea = document.getElementById('main-area');
+  const pageTitleBar = document.getElementById('page-title-bar');
+  const logo = document.querySelector('.logo');
 
-function saveAthlete() {
-  try { localStorage.setItem('endure_athlete', JSON.stringify(athlete)); } catch(e) {}
+  if (isDesktop) {
+    // Restructure layout for sidebar
+    document.getElementById('app').style.flexDirection = 'row';
+    mainArea.style.display = 'flex';
+    mainArea.style.flexDirection = 'column';
+    mainArea.style.flex = '1';
+    mainArea.style.overflow = 'hidden';
+    mainArea.style.height = '100vh';
+
+    // Move tab bar to sidebar position (before main area)
+    tabBar.style.cssText = `flex-direction:column;width:var(--sidebar-w);height:100vh;border-top:none;border-right:1px solid var(--border2);padding:0;order:-1;gap:0;flex-shrink:0;overflow:hidden;`;
+
+    // Add sidebar logo
+    let sideLogoSlot = document.getElementById('sidebar-logo-slot');
+    sideLogoSlot.innerHTML = `<div style="display:flex;align-items:center;gap:9px;padding:20px 18px 16px;border-bottom:1px solid var(--border)">
+      <svg width="26" height="26" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#185FA5"/><path d="M5 31 Q11 30 16 27 Q21 24 26 20 Q30 17 35 14" stroke="white" stroke-opacity="0.25" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M5 27 Q10 25 15 22 Q20 18 24 15 Q28 12 35 10" stroke="white" stroke-opacity="0.55" stroke-width="1.7" fill="none" stroke-linecap="round"/><path d="M5 23 Q10 20 14 17 Q19 13 23 10 Q27 8 35 6" stroke="white" stroke-opacity="1" stroke-width="2.1" fill="none" stroke-linecap="round"/></svg>
+      <span style="font-size:16px;font-weight:700;color:var(--blue)">Endure AI</span>
+    </div>`;
+
+    // Style tab buttons for sidebar
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.style.cssText = 'flex:0;flex-direction:row;justify-content:flex-start;gap:10px;padding:13px 18px;border-radius:0;border-left:3px solid transparent;width:100%';
+    });
+    document.querySelectorAll('.tab-btn.active').forEach(btn => {
+      btn.style.borderLeftColor = 'var(--blue)';
+      btn.style.background = 'var(--blue-pale)';
+      btn.style.color = 'var(--blue)';
+    });
+    document.querySelectorAll('.tab-lbl').forEach(lbl => {
+      lbl.style.cssText = 'font-size:13px;font-weight:500;text-transform:none;letter-spacing:0';
+    });
+
+    // Sidebar fitness connect at bottom
+    const bottomSlot = document.createElement('div');
+    bottomSlot.style.cssText = 'margin-top:auto;padding:14px 18px;border-top:1px solid var(--border)';
+    bottomSlot.innerHTML = `<div style="font-size:11px;color:var(--text3);margin-bottom:8px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em">Connected</div><div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--green);font-weight:500"><span>⌚</span> Garmin synced</div>`;
+    tabBar.appendChild(bottomSlot);
+
+    // Top bar becomes header
+    topBar.style.cssText = 'height:56px;border-bottom:1px solid var(--border2);background:var(--bg);padding:0 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0';
+    logo.style.display = 'none';
+    pageTitleBar.style.display = 'block';
+
+    // Pages fill height
+    document.getElementById('pages').style.cssText = 'flex:1;overflow:hidden;position:relative';
+    document.querySelectorAll('.page').forEach(p => {
+      p.style.padding = '28px 36px 40px';
+    });
+    document.querySelector('.page.active').style.display = 'block';
+    document.querySelector('.page.active').style.opacity = '1';
+
+    // Garmin pill styling for light header
+    document.getElementById('garmin-pill').style.cssText = 'font-size:11px;font-weight:500;padding:4px 11px;border-radius:20px;border:1px solid var(--border2);color:var(--green);background:var(--green-dim)';
+  }
 }
 
-// Training metrics (in real app these come from Garmin)
-const metrics = {
-  ctl: 74, atl: 81, tsb: -7, weeklyTss: 487, tssTarget: 520,
-  swim: { val: 6200, unit: 'yards', delta: '+800', pct: 78, color: '#1a6fb5' },
-  bike: { val: 87, unit: 'miles', delta: '+12', pct: 68, color: '#00a859' },
-  run:  { val: 22,  unit: 'miles', delta: '=0', pct: 55, color: '#e07800' },
-  lift: { val: 2,   unit: 'sessions', delta: '−1', pct: 67, color: '#6b44c4' },
-};
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+let currentPage = 'dashboard';
+const PAGE_TITLES = { dashboard:'Today', plan:'Training plan', coach:'Coach', profile:'Profile' };
 
-// ══════════════════════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════════════════════
 function showPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
-  document.getElementById('p-' + id).classList.add('active');
+  currentPage = id;
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+    if (window.innerWidth >= 768) p.style.display = 'none';
+  });
+  document.querySelectorAll('.tab-btn').forEach(t => {
+    t.classList.remove('active');
+    if (window.innerWidth >= 768) {
+      t.style.background = 'transparent';
+      t.style.color = 'var(--text3)';
+      t.style.borderLeftColor = 'transparent';
+    }
+  });
+  const pg = document.getElementById('p-' + id);
+  pg.classList.add('active');
+  if (window.innerWidth >= 768) { pg.style.display = 'block'; pg.style.opacity = '1'; }
   el.classList.add('active');
+  if (window.innerWidth >= 768) {
+    el.style.background = 'var(--blue-pale)';
+    el.style.color = 'var(--blue)';
+    el.style.borderLeftColor = 'var(--blue)';
+  }
+  document.getElementById('page-title-bar').textContent = PAGE_TITLES[id] || id;
   if (id === 'coach') setTimeout(() => {
     const m = document.getElementById('chat-msgs');
     if (m) m.scrollTop = m.scrollHeight;
   }, 60);
 }
 
-// ══════════════════════════════════════════════════════════════
-// METRIC STATUS LOGIC
-// ══════════════════════════════════════════════════════════════
-function getMetricStatus(key, val) {
-  // Returns 'ok' | 'warn' | 'bad'
-  if (key === 'ctl') return 'ok'; // CTL growth is always good
-  if (key === 'atl') {
-    if (val > 100) return 'bad';
-    if (val > 88) return 'warn';
-    return 'ok';
-  }
-  if (key === 'tsb') {
-    if (val < -20) return 'bad';  // too fatigued
-    if (val < -10) return 'warn';
-    if (val > 15)  return 'warn'; // too fresh / detraining
-    return 'ok';
-  }
-  if (key === 'weeklyTss') {
-    const pct = val / metrics.tssTarget;
-    if (pct > 1.15) return 'bad';
-    if (pct > 1.05) return 'warn';
-    return 'ok';
-  }
+// ── METRIC STATUS ─────────────────────────────────────────────────────────────
+function metricStatus(key, val) {
+  if (key==='atl') return val>100?'bad':val>88?'warn':'ok';
+  if (key==='tsb') return val<-20?'bad':val<-10?'warn':val>15?'warn':'ok';
+  if (key==='weeklyTss') { const p=val/metrics_data.tssTarget; return p>1.15?'bad':p>1.05?'warn':'ok'; }
   return 'ok';
 }
 
-function statusColor(status) {
-  if (status === 'bad')  return '#d42b2b';
-  if (status === 'warn') return '#e07800';
-  return '#111111';
-}
-
-function statusCardClass(status) {
-  if (status === 'bad')  return 'bg-bad';
-  if (status === 'warn') return 'bg-warn';
-  return '';
-}
-
-// ══════════════════════════════════════════════════════════════
-// RENDER DASHBOARD METRICS
-// ══════════════════════════════════════════════════════════════
-function renderMetrics() {
+function renderStats() {
   const items = [
-    { key: 'ctl',       label: 'CTL — Fitness',  val: metrics.ctl,        sub: '▲ 3 this week' },
-    { key: 'atl',       label: 'ATL — Fatigue',  val: metrics.atl,        sub: 'Acute load' },
-    { key: 'tsb',       label: 'TSB — Form',     val: (metrics.tsb < 0 ? '−' : '') + Math.abs(metrics.tsb), sub: 'Building phase' },
-    { key: 'weeklyTss', label: 'Weekly TSS',     val: metrics.weeklyTss,  sub: `/ ${metrics.tssTarget} target` },
+    {key:'ctl',       label:'CTL — Fitness', val:metrics_data.ctl,       sub:'▲ 3 this week', raw:metrics_data.ctl},
+    {key:'atl',       label:'ATL — Fatigue', val:metrics_data.atl,       sub:'Acute load',     raw:metrics_data.atl},
+    {key:'tsb',       label:'TSB — Form',    val:(metrics_data.tsb<0?'−':'')+Math.abs(metrics_data.tsb), sub:'Building phase', raw:metrics_data.tsb},
+    {key:'weeklyTss', label:'Weekly TSS',    val:metrics_data.weeklyTss, sub:`/ ${metrics_data.tssTarget} target`, raw:metrics_data.weeklyTss},
   ];
-  document.getElementById('metrics-row').innerHTML = items.map(m => {
-    const status = getMetricStatus(m.key, typeof m.val === 'string' ? metrics.tsb : m.val);
-    const color = statusColor(status);
-    const cls = statusCardClass(status);
-    return `<div class="metric-card ${cls}">
-      <div class="metric-label">${m.label}</div>
-      <div class="metric-val" style="color:${color}">${m.val}</div>
-      <div class="metric-sub">${m.sub}</div>
-    </div>`;
+  document.getElementById('stat-grid').innerHTML = items.map(m => {
+    const s = metricStatus(m.key, m.raw);
+    const prog = m.key==='weeklyTss' ? `<div class="prog-bar-sm"><div class="prog-bar-fill" style="width:${Math.min(Math.round(metrics_data.weeklyTss/metrics_data.tssTarget*100),100)}%"></div></div>` : '';
+    return `<div class="stat-card ${s==='bad'?'bad':s==='warn'?'warn':''}"><div class="s-lbl">${m.label}</div><div class="s-val">${m.val}</div><div class="s-sub">${m.sub}</div>${prog}</div>`;
   }).join('');
 }
 
 function renderVolume() {
-  const sports = ['swim','bike','run','lift'];
-  const labels = ['Swim','Bike','Run','Lift'];
-  document.getElementById('volume-row').innerHTML = sports.map((s,i) => {
-    const d = metrics[s];
-    return `<div class="vol-card">
-      <div class="vol-sport"><div class="vol-dot" style="background:${d.color}"></div>${labels[i]}</div>
-      <div class="vol-num">${typeof d.val === 'number' && d.val >= 1000 ? d.val.toLocaleString() : d.val}</div>
-      <div class="vol-unit">${d.unit}</div>
-      <div class="vol-delta">${d.delta} vs last week</div>
-      <div class="vol-bar"><div class="vol-fill" style="width:${d.pct}%;background:${d.color}"></div></div>
-    </div>`;
+  const sports = ['swim','bike','run','lift'], labels = ['Swim','Bike','Run','Lift'];
+  document.getElementById('vol-grid').innerHTML = sports.map((s,i) => {
+    const d = metrics_data[s];
+    const num = typeof d.val==='number'&&d.val>=1000 ? d.val.toLocaleString() : d.val;
+    return `<div class="vol-card"><div class="v-sport"><div class="v-dot" style="background:${d.color}"></div>${labels[i]}</div><div class="v-num">${num}</div><div class="v-unit">${d.unit}</div><div class="v-delta">${d.delta} vs last week</div><div class="v-bar"><div class="v-fill" style="width:${d.pct}%;background:${d.color}"></div></div></div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════════════════════════
-// RENDER PROFILE
-// ══════════════════════════════════════════════════════════════
-function renderAthleteGrid(editing = false) {
-  const fields = [
-    { key: 'sex', label: 'Sex' },
-    { key: 'gender', label: 'Gender' },
-    { key: 'height', label: 'Height' },
-    { key: 'weight', label: 'Weight' },
-  ];
-  document.getElementById('athlete-grid').innerHTML = fields.map(f => `
-    <div class="pf-card">
-      <div class="pf-label">${f.label}</div>
-      ${editing
-        ? `<input class="pf-input" id="edit-a-${f.key}" value="${athlete[f.key]}" />`
-        : `<div class="pf-val" style="font-size:18px">${athlete[f.key]}</div>`}
-    </div>`).join('');
+// ── PROFILE RENDER ────────────────────────────────────────────────────────────
+function renderAthleteGrid(editing=false) {
+  const fields = [{key:'sex',label:'Sex'},{key:'gender',label:'Gender'},{key:'height',label:'Height'},{key:'weight',label:'Weight'}];
+  document.getElementById('athlete-grid').innerHTML = `<div class="pf-grid">${fields.map(f=>`<div class="pf-card"><div class="pf-label">${f.label}</div>${editing?`<input class="pf-input" id="ea-${f.key}" value="${athlete[f.key]}"/>`:`<div class="pf-val" style="font-size:18px">${athlete[f.key]}</div>`}</div>`).join('')}</div>`;
 }
-
-function renderPerfGrid(editing = false) {
-  const fields = [
-    { key: 'ftp',            label: 'FTP',            unit: 'W' },
-    { key: 'vo2max',         label: 'VO2 Max',        unit: 'ml/kg' },
-    { key: 'thresholdPace',  label: 'Threshold Pace', unit: '/mi' },
-    { key: 'css',            label: 'CSS Swim',       unit: '/100m' },
-  ];
-  document.getElementById('perf-grid').innerHTML = fields.map(f => `
-    <div class="pf-card">
-      <div class="pf-label">${f.label}</div>
-      ${editing
-        ? `<input class="pf-input" id="edit-p-${f.key}" value="${athlete[f.key]}" />`
-        : `<div class="pf-val">${athlete[f.key]} <span style="font-size:13px;color:var(--text3)">${f.unit}</span></div>`}
-    </div>`).join('');
+function renderPerfGrid(editing=false) {
+  const fields = [{key:'ftp',label:'FTP',unit:'W'},{key:'vo2max',label:'VO2 Max',unit:'ml/kg'},{key:'thresholdPace',label:'Threshold Pace',unit:'/mi'},{key:'css',label:'CSS Swim',unit:'/100m'}];
+  document.getElementById('perf-grid').innerHTML = `<div class="pf-grid">${fields.map(f=>`<div class="pf-card"><div class="pf-label">${f.label}</div>${editing?`<input class="pf-input" id="ep-${f.key}" value="${athlete[f.key]}"/>`:`<div class="pf-val">${athlete[f.key]} <span style="font-size:12px;color:var(--text3)">${f.unit}</span></div>`}</div>`).join('')}</div>`;
 }
-
 function renderRunZones() {
-  // Parse threshold pace e.g. "7:45" -> seconds
-  const parts = athlete.thresholdPace.split(':');
-  const threshSec = parseInt(parts[0]) * 60 + parseInt(parts[1] || 0);
-  function fmt(s) {
-    const m = Math.floor(s/60), sec = Math.round(s%60);
-    return `${m}:${sec.toString().padStart(2,'0')}`;
-  }
-  const zones = [
-    { name: 'Z1 Recovery',   color: '#00a859', low: threshSec * 1.35, high: null },
-    { name: 'Z2 Aerobic',    color: '#00a859', low: threshSec * 1.16, high: threshSec * 1.35 },
-    { name: 'Z3 Tempo',      color: '#e07800', low: threshSec * 1.05, high: threshSec * 1.16 },
-    { name: 'Z4 Threshold',  color: '#c04820', low: threshSec * 0.95, high: threshSec * 1.05 },
-    { name: 'Z5 VO2max',     color: '#d42b2b', low: null, high: threshSec * 0.95 },
-  ];
-  document.getElementById('run-zones').innerHTML = zones.map(z => `
-    <div class="zone-row">
-      <div class="zone-name" style="color:${z.color}">${z.name}</div>
-      <div class="zone-range" style="color:${z.color}">
-        ${z.low && z.high ? fmt(z.low) + '–' + fmt(z.high) : z.low ? '&gt;' + fmt(z.low) : '&lt;' + fmt(z.high)} /mi
-      </div>
-    </div>`).join('');
+  const p = athlete.thresholdPace.split(':'); const ts = parseInt(p[0])*60+parseInt(p[1]||0);
+  const fmt = s=>`${Math.floor(s/60)}:${Math.round(s%60).toString().padStart(2,'0')}`;
+  [['Z1 Recovery','#185FA5',`>${fmt(ts*1.35)} /mi`],['Z2 Aerobic','#185FA5',`${fmt(ts*1.16)}–${fmt(ts*1.35)} /mi`],['Z3 Tempo','#854F0B',`${fmt(ts*1.05)}–${fmt(ts*1.16)} /mi`],['Z4 Threshold','#A32D2D',`${fmt(ts*0.95)}–${fmt(ts*1.05)} /mi`],['Z5 VO2max','#A32D2D',`<${fmt(ts*0.95)} /mi`]].forEach((z,i,a) => {
+    if(!document.getElementById('run-zones').innerHTML) document.getElementById('run-zones').innerHTML='';
+  });
+  document.getElementById('run-zones').innerHTML = [['Z1 Recovery','#185FA5',`>${fmt(ts*1.35)} /mi`],['Z2 Aerobic','#185FA5',`${fmt(ts*1.16)}–${fmt(ts*1.35)} /mi`],['Z3 Tempo','#854F0B',`${fmt(ts*1.05)}–${fmt(ts*1.16)} /mi`],['Z4 Threshold','#A32D2D',`${fmt(ts*0.95)}–${fmt(ts*1.05)} /mi`],['Z5 VO2max','#A32D2D',`<${fmt(ts*0.95)} /mi`]].map(z=>`<div class="zone-row"><div class="zone-name" style="color:${z[1]}">${z[0]}</div><div class="zone-range" style="color:${z[1]}">${z[2]}</div></div>`).join('');
 }
-
 function renderBikeZones() {
-  const ftp = parseInt(athlete.ftp);
-  const zones = [
-    { name: 'Z1 Recovery',  color: '#00a859', low: 0,              high: Math.round(ftp * 0.55) },
-    { name: 'Z2 Endurance', color: '#00a859', low: Math.round(ftp * 0.55), high: Math.round(ftp * 0.75) },
-    { name: 'Z3 Tempo',     color: '#e07800', low: Math.round(ftp * 0.75), high: Math.round(ftp * 0.90) },
-    { name: 'Z4 Threshold', color: '#c04820', low: Math.round(ftp * 0.90), high: Math.round(ftp * 1.05) },
-    { name: 'Z5 VO2max',    color: '#d42b2b', low: Math.round(ftp * 1.06), high: null },
-  ];
-  document.getElementById('bike-zones').innerHTML = zones.map(z => `
-    <div class="zone-row">
-      <div class="zone-name" style="color:${z.color}">${z.name}</div>
-      <div class="zone-range" style="color:${z.color}">
-        ${z.high ? z.low + '–' + z.high : '&gt;' + z.low}W
-      </div>
-    </div>`).join('');
+  const f = parseInt(athlete.ftp);
+  document.getElementById('bike-zones').innerHTML = [['Z1 Recovery','#185FA5',`<${Math.round(f*.55)}W`],['Z2 Endurance','#185FA5',`${Math.round(f*.55)}–${Math.round(f*.75)}W`],['Z3 Tempo','#854F0B',`${Math.round(f*.75)}–${Math.round(f*.90)}W`],['Z4 Threshold','#A32D2D',`${Math.round(f*.90)}–${Math.round(f*1.05)}W`],['Z5 VO2max','#A32D2D',`>${Math.round(f*1.06)}W`]].map(z=>`<div class="zone-row"><div class="zone-name" style="color:${z[1]}">${z[0]}</div><div class="zone-range" style="color:${z[1]}">${z[2]}</div></div>`).join('');
 }
-
-function renderProfile() {
-  renderAthleteGrid(false);
-  renderPerfGrid(false);
-  renderRunZones();
-  renderBikeZones();
+function renderHealthNotes(editing=false) {
+  const card = document.getElementById('health-card');
+  if (editing) {
+    card.innerHTML = `<textarea class="pf-textarea" id="health-input">${athlete.healthNotes}</textarea>`;
+  } else {
+    card.innerHTML = `<div style="font-size:14px;color:var(--text2);line-height:1.6" id="health-display">${athlete.healthNotes}</div>`;
+  }
 }
+function renderProfile() { renderAthleteGrid(); renderPerfGrid(); renderRunZones(); renderBikeZones(); renderHealthNotes(); }
 
-// ══════════════════════════════════════════════════════════════
-// EDIT / SAVE / CANCEL
-// ══════════════════════════════════════════════════════════════
-let editingSection = null;
-
-function editSection(section) {
-  editingSection = section;
-  if (section === 'athlete') {
+// ── EDIT / SAVE / CANCEL ──────────────────────────────────────────────────────
+function editSection(sec) {
+  if (sec==='athlete') {
     renderAthleteGrid(true);
-    document.getElementById('athlete-actions').innerHTML = `
-      <button class="cancel-btn" onclick="cancelEdit('athlete')">Cancel</button>
-      <button class="save-btn" onclick="saveSection('athlete')">Save</button>`;
-  } else {
+    document.getElementById('athlete-actions').innerHTML = `<div class="sec-actions"><button class="cancel-btn" onclick="cancelEdit('athlete')">Cancel</button><button class="save-btn" onclick="saveSection('athlete')">Save</button></div>`;
+  } else if (sec==='perf') {
     renderPerfGrid(true);
-    document.getElementById('perf-actions').innerHTML = `
-      <button class="cancel-btn" onclick="cancelEdit('perf')">Cancel</button>
-      <button class="save-btn" onclick="saveSection('perf')">Save</button>`;
+    document.getElementById('perf-actions').innerHTML = `<div class="sec-actions"><button class="cancel-btn" onclick="cancelEdit('perf')">Cancel</button><button class="save-btn" onclick="saveSection('perf')">Save</button></div>`;
+  } else if (sec==='health') {
+    renderHealthNotes(true);
+    document.getElementById('health-actions').innerHTML = `<div class="sec-actions"><button class="cancel-btn" onclick="cancelEdit('health')">Cancel</button><button class="save-btn" onclick="saveSection('health')">Save</button></div>`;
   }
 }
-
-function cancelEdit(section) {
-  if (section === 'athlete') {
-    renderAthleteGrid(false);
-    document.getElementById('athlete-actions').innerHTML = `<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`;
-  } else {
-    renderPerfGrid(false);
-    document.getElementById('perf-actions').innerHTML = `<button class="edit-btn" onclick="editSection('perf')">Edit</button>`;
-  }
+function cancelEdit(sec) {
+  if (sec==='athlete') { renderAthleteGrid(); document.getElementById('athlete-actions').innerHTML=`<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`; }
+  else if (sec==='perf') { renderPerfGrid(); document.getElementById('perf-actions').innerHTML=`<button class="edit-btn" onclick="editSection('perf')">Edit</button>`; }
+  else if (sec==='health') { renderHealthNotes(); document.getElementById('health-actions').innerHTML=`<button class="edit-btn" onclick="editSection('health')">Edit</button>`; }
 }
-
-function saveSection(section) {
-  if (section === 'athlete') {
-    athlete.sex    = document.getElementById('edit-a-sex')?.value    || athlete.sex;
-    athlete.gender = document.getElementById('edit-a-gender')?.value || athlete.gender;
-    athlete.height = document.getElementById('edit-a-height')?.value || athlete.height;
-    athlete.weight = document.getElementById('edit-a-weight')?.value || athlete.weight;
-    renderAthleteGrid(false);
-    document.getElementById('athlete-actions').innerHTML = `<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`;
-  } else {
-    athlete.ftp           = document.getElementById('edit-p-ftp')?.value           || athlete.ftp;
-    athlete.vo2max        = document.getElementById('edit-p-vo2max')?.value        || athlete.vo2max;
-    athlete.thresholdPace = document.getElementById('edit-p-thresholdPace')?.value || athlete.thresholdPace;
-    athlete.css           = document.getElementById('edit-p-css')?.value           || athlete.css;
-    renderPerfGrid(false);
-    renderRunZones();
-    renderBikeZones();
-    document.getElementById('perf-actions').innerHTML = `<button class="edit-btn" onclick="editSection('perf')">Edit</button>`;
+function saveSection(sec) {
+  if (sec==='athlete') {
+    ['sex','gender','height','weight'].forEach(k=>{ const el=document.getElementById('ea-'+k); if(el) athlete[k]=el.value; });
+    renderAthleteGrid(); document.getElementById('athlete-actions').innerHTML=`<button class="edit-btn" onclick="editSection('athlete')">Edit</button>`;
+  } else if (sec==='perf') {
+    ['ftp','vo2max','thresholdPace','css'].forEach(k=>{ const el=document.getElementById('ep-'+k); if(el) athlete[k]=el.value; });
+    renderPerfGrid(); renderRunZones(); renderBikeZones();
+    document.getElementById('perf-actions').innerHTML=`<button class="edit-btn" onclick="editSection('perf')">Edit</button>`;
+    buildSystemPrompt();
+  } else if (sec==='health') {
+    const el = document.getElementById('health-input'); if(el) athlete.healthNotes = el.value;
+    renderHealthNotes(); document.getElementById('health-actions').innerHTML=`<button class="edit-btn" onclick="editSection('health')">Edit</button>`;
+    buildSystemPrompt();
   }
   saveAthlete();
-  // Update AI system prompt with new values
-  buildSystemPrompt();
 }
 
-// ══════════════════════════════════════════════════════════════
-// AI COACH
-// ══════════════════════════════════════════════════════════════
-let chatHistory = [];
-let chatBusy = false;
-let systemPrompt = '';
+// ── PLAN TAB ──────────────────────────────────────────────────────────────────
+const PLAN_METRICS = [
+  { label:'FTP (cycling)', start:'Start: 256W', now:'268W', delta:'+12W ↑', proj:'Projected at race day: ~282W', solid:'0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28', projLine:'297,28 340,22 380,16', area:'0,65 42,61 84,56 126,51 168,45 210,39 252,33 297,28 297,70 0,70', dot:[297,28] },
+  { label:'Threshold pace', start:'Start: 8:03/mi', now:'7:45/mi', delta:'−18s ↑', proj:'Projected at race day: ~7:28/mi', solid:'0,20 42,24 84,30 126,37 168,44 210,49 252,55 297,60', projLine:'297,60 340,64 380,68', area:'0,20 42,24 84,30 126,37 168,44 210,49 252,55 297,60 297,70 0,70', dot:[297,60] },
+  { label:'CSS swim pace', start:'Start: 1:46/100m', now:'1:42/100m', delta:'−4s ↑', proj:'Projected at race day: ~1:38/100m', solid:'0,15 42,20 84,26 126,33 168,40 210,46 252,52 297,57', projLine:'297,57 340,62 380,66', area:'0,15 42,20 84,26 126,33 168,40 210,46 252,52 297,57 297,70 0,70', dot:[297,57] },
+  { label:'CTL (fitness)', start:'Start: 52', now:'74', delta:'+22 pts ↑', proj:'Target at race day: ~90', solid:'0,68 42,63 84,57 126,52 168,46 210,40 252,34 297,28', projLine:'297,28 340,20 380,14', area:'0,68 42,63 84,57 126,52 168,46 210,40 252,34 297,28 297,70 0,70', dot:[297,28] },
+  { label:'Weekly run miles', start:'Start: 16 mi/wk', now:'22 mi/wk', delta:'+6 mi ↑', proj:'Peak: ~26 mi/wk (wk 13)', solid:'0,65 42,62 84,58 126,54 168,49 210,44 252,39 297,34', projLine:'297,34 340,28 380,32', area:'0,65 42,62 84,58 126,54 168,49 210,44 252,39 297,34 297,70 0,70', dot:[297,34] },
+  { label:'Weekly bike miles', start:'Start: 62 mi/wk', now:'87 mi/wk', delta:'+25 mi ↑', proj:'Peak: ~105 mi/wk (wk 13)', solid:'0,68 42,64 84,59 126,53 168,47 210,41 252,35 297,29', projLine:'297,29 340,22 380,26', area:'0,68 42,64 84,59 126,53 168,47 210,41 252,35 297,29 297,70 0,70', dot:[297,29] },
+  { label:'Weekly swim yards', start:'Start: 4,200 yds', now:'6,200 yds', delta:'+2k yds ↑', proj:'Peak: ~7,200 yds (wk 13)', solid:'0,66 42,62 84,57 126,52 168,46 210,40 252,34 297,29', projLine:'297,29 340,23 380,27', area:'0,66 42,62 84,57 126,52 168,46 210,40 252,34 297,29 297,70 0,70', dot:[297,29] },
+];
+let selectedMetric = 0;
 
+function renderMetricRows() {
+  document.getElementById('metric-rows').innerHTML = PLAN_METRICS.map((m,i) => `
+    <tr class="metric-row ${i===selectedMetric?'selected':''}" onclick="selectMetric(${i})">
+      <td><div class="m-label"><div class="m-dot" style="background:var(--blue);opacity:${i===selectedMetric?1:0.35}"></div>${m.label}</div></td>
+      <td class="m-val">${m.now}</td>
+      <td class="m-badge"><span class="trend-up">${m.delta}</span></td>
+    </tr>`).join('');
+}
+function selectMetric(i) {
+  selectedMetric = i;
+  const m = PLAN_METRICS[i];
+  document.getElementById('chart-title').textContent = m.label;
+  document.getElementById('chart-start').textContent = m.start;
+  document.getElementById('chart-now').textContent = m.now;
+  document.getElementById('chart-delta').textContent = m.delta;
+  document.getElementById('chart-proj').textContent = m.proj;
+  document.getElementById('chart-line').setAttribute('points', m.solid);
+  document.getElementById('chart-proj-line').setAttribute('points', m.projLine);
+  document.getElementById('chart-area').setAttribute('points', m.area);
+  document.getElementById('chart-dot').setAttribute('cx', m.dot[0]);
+  document.getElementById('chart-dot').setAttribute('cy', m.dot[1]);
+  renderMetricRows();
+}
+
+function renderWeeks() {
+  const weeks = [
+    ['✓','done','Base — aerobic foundation','380 TSS · 16 mi run · 62 mi bike · 4,200 yds'],
+    ['✓','done','Base — volume increase','410 TSS · 18 mi run · 68 mi bike · 4,800 yds'],
+    ['✓','done','Base — intensity intro','440 TSS · 19 mi run · 72 mi bike · 5,200 yds'],
+    ['✓','done','Recovery week','280 TSS · 14 mi run · 50 mi bike · 3,800 yds'],
+    ['✓','done','Build — threshold work','470 TSS · 20 mi run · 78 mi bike · 5,600 yds'],
+    ['✓','done','Build — long efforts','490 TSS · 21 mi run · 82 mi bike · 5,800 yds'],
+    ['✓','done','Build — race simulation','510 TSS · 22 mi run · 85 mi bike · 6,000 yds'],
+    ['✓','done','Recovery week','310 TSS · 16 mi run · 55 mi bike · 4,200 yds'],
+    ['9','active','Build — peak volume','520 TSS · 22 mi run · 87 mi bike · 6,200 yds'],
+    ['','future','Build — VO2max work','530 TSS · 23 mi run · 90 mi bike · 6,400 yds'],
+    ['','future','Build — race pace focus','540 TSS · 24 mi run · 92 mi bike'],
+    ['','future','Recovery week','320 TSS · 17 mi run · 58 mi bike'],
+    ['','future','Peak — race simulation','550 TSS target'],
+    ['','future','Peak — final hard week','540 TSS target'],
+    ['','future','Taper — begin','380 TSS target'],
+    ['','future','Taper — race week','Race day: Oct 11'],
+  ];
+  document.getElementById('weeks-list').innerHTML = weeks.map((w,i)=>`
+    <div class="week-row">
+      <div class="wk-${w[1]}">${w[0]}</div>
+      <div class="wk-num" style="${w[1]==='active'?'color:var(--blue)':''}"">Wk ${i+1}</div>
+      <div class="wk-body">
+        <div class="wk-phase" style="${w[1]==='future'?'color:var(--text3)':w[1]==='active'?'color:var(--blue)':''}">${w[2]}</div>
+        <div class="wk-meta" style="${w[1]==='future'?'color:var(--text3)':''}">${w[3]}</div>
+      </div>
+    </div>`).join('');
+}
+
+function switchPlanTab(tab, el) {
+  document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('plan-progress').style.display = tab==='progress'?'block':'none';
+  document.getElementById('plan-weeks').style.display = tab==='weeks'?'block':'none';
+}
+
+// ── AI COACH ─────────────────────────────────────────────────────────────────
+let chatHistory=[], chatBusy=false, sysPrompt='';
 function buildSystemPrompt() {
-  systemPrompt = `You are Endure AI, an expert triathlon and endurance coach.
-
-Athlete profile:
-- Name: Lundquist
-- Sex: ${athlete.sex}, Height: ${athlete.height}, Weight: ${athlete.weight}
-- FTP: ${athlete.ftp}W | Threshold run pace: ${athlete.thresholdPace}/mile | CSS swim: ${athlete.css}/100m | VO2max: ${athlete.vo2max}
-- Current fitness: CTL ${metrics.ctl}, ATL ${metrics.atl}, TSB ${metrics.tsb}
-- Weekly volume: ${metrics.swim.val} yds swim, ${metrics.bike.val} mi bike, ${metrics.run.val} mi run, ${metrics.lift.val} strength sessions
-- Health notes: ${athlete.healthNotes}
-- Goal races: ${athlete.races.map(r => r.name + ' (' + r.weeksOut + ' weeks out)').join(', ')}
-- Training context: Week 9 of 24. Today is Thursday. Friday = run intervals. Saturday = long ride.
-
-Coaching principles:
-- Be direct and specific. Give exact paces, watts, durations, HR ranges.
-- Always account for the right knee/meniscus history on any leg work.
-- When building structured workouts, list steps as: Step → Duration → Zone → Pace or Power → HR range.
-- Format Garmin-ready workouts clearly so the athlete can see each interval.
-- Keep responses concise. Use short bullets for workout steps.
-- If a metric is out of range (ATL > 100, TSB < −20), flag it proactively.`;
+  sysPrompt=`You are Endure AI, an expert triathlon and endurance coach.
+Athlete: ${athlete.sex}, ${athlete.height}, ${athlete.weight}
+FTP: ${athlete.ftp}W | Threshold pace: ${athlete.thresholdPace}/mi | CSS: ${athlete.css}/100m | VO2max: ${athlete.vo2max}
+Fitness: CTL ${metrics_data.ctl}, ATL ${metrics_data.atl}, TSB ${metrics_data.tsb}
+Volume: ${metrics_data.swim.val} yds swim, ${metrics_data.bike.val} mi bike, ${metrics_data.run.val} mi run, ${metrics_data.lift.val} strength sessions
+Health: ${athlete.healthNotes}
+Races: Houston Tri Olympic (Jun 14, 7 wks out), Ironman 70.3 Texas (Oct 11, 24 wks out)
+Context: Week 9 of 24. Thursday — strength day. Friday: run intervals. Saturday: long ride.
+Rules: Be direct and specific. Give exact paces, watts, durations, HR ranges. Always account for health notes. For Garmin workouts list each step: name → duration → zone → pace/watts → HR. Keep responses concise.`;
 }
 buildSystemPrompt();
 
 async function sendChat() {
-  const input = document.getElementById('chat-in');
-  const text = input.value.trim();
-  if (!text || chatBusy) return;
-  input.value = '';
+  const input=document.getElementById('chat-in');
+  const text=input.value.trim();
+  if(!text||chatBusy) return;
+  input.value='';
   await sendMessage(text);
 }
-
 async function sendPrompt(text) {
-  showPage('coach', document.getElementById('tab-coach'));
-  await new Promise(r => setTimeout(r, 120));
+  showPage('coach', document.querySelector('[data-page="coach"]'));
+  await new Promise(r=>setTimeout(r,120));
   await sendMessage(text);
 }
-
 async function sendMessage(text) {
-  if (chatBusy) return;
-  chatBusy = true;
-  const msgs = document.getElementById('chat-msgs');
-  const sendBtn = document.getElementById('chat-send-btn');
-  sendBtn.disabled = true;
-
-  msgs.innerHTML += `<div class="msg user"><div class="msg-bubble">${escHtml(text)}</div></div>`;
-  const typingId = 'typing-' + Date.now();
-  msgs.innerHTML += `<div class="msg ai" id="${typingId}"><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
-  msgs.scrollTop = msgs.scrollHeight;
-
-  chatHistory.push({ role: 'user', content: text });
-
+  if(chatBusy) return;
+  chatBusy=true;
+  const msgs=document.getElementById('chat-msgs');
+  const btn=document.getElementById('send-btn');
+  btn.disabled=true;
+  msgs.innerHTML+=`<div class="msg user"><div class="msg-bubble">${esc(text)}</div></div>`;
+  const tid='t'+Date.now();
+  msgs.innerHTML+=`<div class="msg ai" id="${tid}"><div class="msg-bubble"><div class="typing"><span></span><span></span><span></span></div></div></div>`;
+  msgs.scrollTop=msgs.scrollHeight;
+  chatHistory.push({role:'user',content:text});
   try {
-    // Calls our Vercel serverless function — no API key exposed in browser
-    const res = await fetch('/api/claude', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory,
-      }),
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error);
-    const reply = data.content?.[0]?.text || 'Sorry, something went wrong.';
-    chatHistory.push({ role: 'assistant', content: reply });
-    document.getElementById(typingId).outerHTML =
-      `<div class="msg ai"><div class="msg-bubble" style="white-space:pre-wrap">${escHtml(reply)}</div></div>`;
+    const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:sysPrompt,messages:chatHistory})});
+    const data=await res.json();
+    if(data.error) throw new Error(data.error);
+    const reply=data.content?.[0]?.text||'Something went wrong.';
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(tid).outerHTML=`<div class="msg ai"><div class="msg-bubble" style="white-space:pre-wrap">${esc(reply)}</div></div>`;
   } catch(e) {
-    document.getElementById(typingId).outerHTML =
-      `<div class="msg ai"><div class="msg-bubble" style="color:var(--red)">Connection error — please check your internet and try again. (${e.message})</div></div>`;
+    document.getElementById(tid).outerHTML=`<div class="msg ai"><div class="msg-bubble" style="color:var(--red)">Connection error — try again. (${e.message})</div></div>`;
   }
-
-  msgs.scrollTop = msgs.scrollHeight;
-  chatBusy = false;
-  sendBtn.disabled = false;
+  msgs.scrollTop=msgs.scrollHeight;
+  chatBusy=false; btn.disabled=false;
 }
+document.getElementById('chat-in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat();}});
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
 
-document.getElementById('chat-in').addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
-});
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
-}
-
-// ══════════════════════════════════════════════════════════════
-// PLAN GENERATOR
-// ══════════════════════════════════════════════════════════════
-async function generatePlan() {
-  const race  = document.getElementById('fg-race').value;
-  const date  = document.getElementById('fg-date').value;
-  const weeks = document.getElementById('fg-weeks').value;
-  const days  = document.getElementById('fg-days').value;
-  const prefs = document.getElementById('fg-prefs').value;
-
-  if (!race) { alert('Please select a race type.'); return; }
-
-  const btn = document.getElementById('gen-btn');
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>&nbsp; Generating...';
-
-  // In production this calls /api/claude with a plan-generation prompt
-  await new Promise(r => setTimeout(r, 2000));
-
-  document.getElementById('plan-weeks').innerHTML = `
-    <div class="plan-week-hdr"><span>Week 1 · Base — aerobic foundation</span><span>420 TSS</span></div>
-    ${[
-      ['Mon','rest','Rest','Full recovery'],
-      ['Tue','swim','Aerobic endurance','2,800 yds · Z2 · CSS drills'],
-      ['Wed','bike','Zone 2 ride','90 min · 210–230W · cadence work'],
-      ['Thu','lift','Strength A','55 min · upper + core · knee-safe'],
-      ['Fri','run','Easy run','40 min · Z2 · <9:15/mi'],
-      ['Sat','bike','Long aerobic ride','2h 30m · 215–235W · nutrition practice'],
-      ['Sun','run','Long run','75 min · Z2 · easy effort'],
-    ].map(([day,sport,title,meta]) => `
-      <div class="plan-session">
-        <div class="plan-day">${day}</div>
-        <div class="plan-body">
-          <div class="plan-title">${sport !== 'rest' ? `<span class="badge b-${sport}">${sport}</span>` : ''}${title}</div>
-          <div class="plan-meta">${meta}</div>
-        </div>
-      </div>`).join('')}`;
-
-  document.getElementById('plan-output').style.display = 'block';
-  btn.disabled = false;
-  btn.innerHTML = 'Regenerate plan';
-  document.getElementById('plan-output').scrollIntoView({ behavior: 'smooth' });
-}
-
-async function pushWorkout(btn) {
-  btn.disabled = true; btn.textContent = '...';
-  await new Promise(r => setTimeout(r, 1000));
-  btn.textContent = '✓ Pushed'; btn.style.color = 'var(--green2)';
-}
-
-async function pushAll() {
-  document.querySelectorAll('.push-btn').forEach(b => { b.disabled = true; b.textContent = '...'; });
-  await new Promise(r => setTimeout(r, 1400));
-  document.querySelectorAll('.push-btn').forEach(b => { b.textContent = '✓ Pushed'; b.style.color = 'var(--green2)'; });
-}
-
-// ══════════════════════════════════════════════════════════════
-// GARMIN INFO
-// ══════════════════════════════════════════════════════════════
-function showGarminInfo() {
-  alert('Garmin connection is pending your developer account approval.\n\nOnce you receive your Consumer Key and Secret from Garmin, share them with your developer and the Connect button will link directly to your Garmin account.');
-}
-
-// ══════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════
-renderMetrics();
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderStats();
 renderVolume();
 renderProfile();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
-}
+renderMetricRows();
+renderWeeks();
+setupDesktop();
+window.addEventListener('resize', setupDesktop);
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
